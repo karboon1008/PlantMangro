@@ -190,6 +190,7 @@ class fragment_result : Fragment() {
                 }
             }
 
+
             // Releases model resources if no longer used.
             model.close()
             return maxIdx
