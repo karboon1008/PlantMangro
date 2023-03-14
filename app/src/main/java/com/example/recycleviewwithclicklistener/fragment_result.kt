@@ -31,7 +31,6 @@ import java.io.InputStream
 
 class fragment_result : Fragment() {
 
-
     companion object {
         const val ARG_PHOTO_BITMAP = "arg_photo_bitmap"
 
@@ -62,7 +61,6 @@ class fragment_result : Fragment() {
 
         val photoImageView: ImageView = view.findViewById(R.id.result_image)
         photoImageView.setImageBitmap(photoBitmap)
-
 
         val inputStream: InputStream = requireContext().assets.open("label_result")
         val labels = inputStream.bufferedReader().use { it.readLines() }
@@ -172,7 +170,7 @@ class fragment_result : Fragment() {
         tensorImage = imageProcessor.process(tensorImage)
         val background = detectBackground(photoBitmap)
         if (background == "This image has a white background") {
-            val model = AutoModel32L1EarlystoppingOptimizedVgg16White8020KfoldConverted.newInstance(requireContext() )
+            val model = VggWhite8020Converted.newInstance(requireContext() )
 
             // Creates inputs for reference.
             val inputFeature0 =
@@ -196,7 +194,7 @@ class fragment_result : Fragment() {
             return maxIdx
         }
         else{
-            val model = Layer2VggOptimzedComplexStrat8020Converted.newInstance(requireContext() )
+            val model = VggComplex8020Converted.newInstance(requireContext() )
 
             // Creates inputs for reference.
             val inputFeature0 =
