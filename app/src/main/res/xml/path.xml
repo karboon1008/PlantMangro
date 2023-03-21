@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <cache-path
-        name="shared_images"
-        path="images/" />
+<paths >
+    <external-path name="PlantMangrove" path="Android/data/com.example.myapp/files/Pictures" />
 </paths>

@@ -2,6 +2,7 @@ package com.example.recycleviewwithclicklistener
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.icu.text.CaseMap.Title
 import android.net.Uri
@@ -32,7 +33,7 @@ import java.io.InputStream
 class fragment_result : Fragment() {
 
     companion object {
-        const val ARG_PHOTO_BITMAP = "arg_photo_bitmap"
+        const val ARG_PHOTO_BITMAP = "image"
 
         fun newInstance(photoBitmap: Bitmap): fragment_result {
             val args = Bundle()
@@ -49,7 +50,6 @@ class fragment_result : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             photoBitmap = it.getParcelable(ARG_PHOTO_BITMAP)!!
-
         }
     }
 
@@ -266,5 +266,7 @@ class fragment_result : Fragment() {
         }
 
     }
+
+
 
 }
