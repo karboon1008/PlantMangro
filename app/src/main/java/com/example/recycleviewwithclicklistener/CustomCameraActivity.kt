@@ -3,12 +3,14 @@ package com.example.recycleviewwithclicklistener
 import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -94,24 +96,35 @@ class CustomCameraActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
 
-                    val file = File(getExternalFilesDir(null), "photo.jpg")
-                    val uri: Uri = FileProvider.getUriForFile(baseContext, "$packageName.provider", file)
+                    val file = File(getExternalFilesDir(null), "$name.jpg")
+                    val uri: Uri = FileProvider.getUriForFile(baseContext, "com.example.recycleviewwithclicklistener.provider", file)
 
                     val savedUri = output.savedUri ?: return
-                    val bitmap = BitmapFactory.decodeFile(uri.path)
+                    val `is` = contentResolver.openInputStream(savedUri)
+                    val bitmap = BitmapFactory.decodeStream(`is`)
+                    `is`!!.close()
 
-                    val bundle = Bundle().apply {
-                        putParcelable("image", bitmap)
-                    }
+                    // Specify the new width and height of the scaled bitmap
+                    val scaledWidth = bitmap.width / 2
+                    val scaledHeight = bitmap.height / 2
 
-                    val targetFragment = fragment_result()
-                    targetFragment.arguments = bundle
+                    // Create the scaled bitmap using the createScaledBitmap method
+                    val scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false)
 
+                    // Create a new fragment and pass the imageBitmap to it
+                    val fragment = fragment_result.newInstance(scaledBitmap)
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, targetFragment)
+                        .replace(R.id.contaier, fragment)
                         .addToBackStack(null)
                         .commit()
 
+                    val preview = findViewById<PreviewView>(R.id.viewFinder)
+                    val cameraButton = findViewById<Button>(R.id.camera_capture_button)
+                    val STbtn = findViewById<Button>(R.id.snaptips)
+
+                    preview.visibility = View.INVISIBLE
+                    cameraButton.visibility = View.INVISIBLE
+                    STbtn.visibility = View.INVISIBLE
 
                 }
 

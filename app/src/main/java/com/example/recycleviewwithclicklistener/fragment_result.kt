@@ -2,7 +2,6 @@ package com.example.recycleviewwithclicklistener
 
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.icu.text.CaseMap.Title
 import android.net.Uri
@@ -38,6 +37,7 @@ class fragment_result : Fragment() {
         fun newInstance(photoBitmap: Bitmap): fragment_result {
             val args = Bundle()
             args.putParcelable(ARG_PHOTO_BITMAP, photoBitmap)
+
             val fragment = fragment_result()
             fragment.arguments = args
             return fragment
@@ -49,11 +49,12 @@ class fragment_result : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            photoBitmap = it.getParcelable(ARG_PHOTO_BITMAP)!!
+            photoBitmap = it.getParcelable(ARG_PHOTO_BITMAP)?:return
         }
     }
 
     override fun onCreateView(
+
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -81,6 +82,8 @@ class fragment_result : Fragment() {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 startActivity(intent)
             }
+
+
 
             val cardViewContainer: LinearLayout = view.findViewById(R.id.cardViewContainer)
             val cardView: CardView = cardViewContainer.findViewById(R.id.cardview)

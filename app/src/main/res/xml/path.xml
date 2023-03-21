@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths >
-    <external-path name="PlantMangrove" path="Android/data/com.example.myapp/files/Pictures" />
+    <external-files-path name="PlantMangrove" path="/" />
 </paths>

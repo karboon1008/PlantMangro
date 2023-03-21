@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_result"
-        android:name="com.example.recycleviewwithclicklistener.fragment_result"
+        android:name="com.example.PlantMangroApp.fragment_result"
         android:label="fragment_result"
         tools:layout="@layout/fragment_result" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/home2"
-        android:name="com.example.recycleviewwithclicklistener.home"
+        android:name="com.example.PlantMangroApp.home"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
