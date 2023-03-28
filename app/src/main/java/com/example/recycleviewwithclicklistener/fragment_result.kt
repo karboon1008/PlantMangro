@@ -3,28 +3,24 @@ package com.example.recycleviewwithclicklistener
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.icu.text.CaseMap.Title
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
-import com.example.recycleviewwithclicklistener.ml.*
+import com.example.recycleviewwithclicklistener.ml.VggComplex8020Converted
+import com.example.recycleviewwithclicklistener.ml.VggWhite8020Converted
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import org.w3c.dom.Text
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
@@ -43,7 +39,6 @@ class fragment_result : Fragment() {
             return fragment
         }
     }
-
     private lateinit var photoBitmap: Bitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +69,8 @@ class fragment_result : Fragment() {
             resultTextView.text = labels[predictionResult].toString()
 
             val words = labels[predictionResult].toString()
+
+            //share
             val baseUrl = "https://en.wikipedia.org/wiki/"
             val queryString = "$words"
             val url = baseUrl + queryString
@@ -83,14 +80,13 @@ class fragment_result : Fragment() {
                 startActivity(intent)
             }
 
-
-
             val cardViewContainer: LinearLayout = view.findViewById(R.id.cardViewContainer)
             val cardView: CardView = cardViewContainer.findViewById(R.id.cardview)
             val imageView: ImageView = cardView.findViewById(R.id.cardview_image)
             val textView: TextView = cardView.findViewById(R.id.cardview_text)
             val quote: TextView = cardView.findViewById(R.id.cardview_quote)
             val shareBtn: Button = view.findViewById(R.id.shareBtn)
+            val collectionBtn: Button = view.findViewById(R.id.collectionBtn)
 
 
             val textList = listOf("\"Mangroves are not just trees, they are an ecosystem and they have been protecting us for thousands of years. When we protect them, we protect ourselves and our future.\" - Angélica María García Arzola, Mexican conservationist and community organizer.",
@@ -120,7 +116,6 @@ class fragment_result : Fragment() {
             val randomText = textList.random() // Generate a random text string from the text list
             quote.text = randomText
 
-
             imageView.setImageBitmap(photoBitmap)
             textView.text = labels[predictionResult].toString()
 
@@ -149,6 +144,10 @@ class fragment_result : Fragment() {
                         val uri = Uri.parse(path)
                         intent.putExtra(Intent.EXTRA_STREAM, uri)
                         startActivity(Intent.createChooser(intent, "Share Image"))
+                    }
+
+                    collectionBtn.setOnClickListener{
+                        collectionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_check_24))
                     }
                 }
             })
@@ -269,7 +268,4 @@ class fragment_result : Fragment() {
         }
 
     }
-
-
-
 }

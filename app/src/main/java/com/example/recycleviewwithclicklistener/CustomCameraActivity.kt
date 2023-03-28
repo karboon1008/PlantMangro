@@ -125,7 +125,6 @@ class CustomCameraActivity : AppCompatActivity() {
                     preview.visibility = View.INVISIBLE
                     cameraButton.visibility = View.INVISIBLE
                     STbtn.visibility = View.INVISIBLE
-
                 }
 
             }
@@ -203,4 +202,6 @@ class CustomCameraActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

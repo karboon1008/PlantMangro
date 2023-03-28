@@ -44,7 +44,6 @@ class WelcomePage : AppCompatActivity() {
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var imageBitmap: Bitmap
     private lateinit var recyclerView: RecyclerView
     private lateinit var mangrovelist: ArrayList<Mangrove>
     private lateinit var mangroveAdapter:MangroveAdapter
@@ -77,9 +76,9 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_collection -> {
-                    val intent =
-                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    startActivityForResult(intent, 100)
+                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    val intent = Intent(this, CollectionPage::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -88,6 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         init()
     }
+
     private fun init() {
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
