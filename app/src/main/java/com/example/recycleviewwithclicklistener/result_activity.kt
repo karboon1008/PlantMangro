@@ -6,8 +6,10 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
-import android.view.View.VISIBLE
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.example.recycleviewwithclicklistener.ml.VggComplex8020Converted
 import com.example.recycleviewwithclicklistener.ml.VggWhite8020Converted
+import kotlinx.coroutines.delay
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
@@ -63,24 +66,28 @@ class result_activity: AppCompatActivity() {
         val photoImageView: ImageView = findViewById(R.id.result_image)
         photoImageView.setImageBitmap(photoBitmap)
 
-
-
         val inputStream: InputStream = this.assets.open("label_result")
         val labels = inputStream.bufferedReader().use { it.readLines() }
 
-        val progressbar:ProgressBar = findViewById(R.id.progressbar)
         val predictButton: Button = findViewById(R.id.button2)
+        val resultTextView: TextView =findViewById(R.id.result)
 
         predictButton.setOnClickListener {
-            progressbar.setVisibility(VISIBLE)
-            if(photoBitmap!=null){
-                // Run the prediction model on the photoBitmap and get the result
-                val predictionResult = runPredictionModel(photoBitmap)
-                progressbar.isInvisible
-                val resultTextView: TextView =findViewById(R.id.result)
-                resultTextView.text = labels[predictionResult].toString()
 
-                val words = labels[predictionResult].toString()
+            if(photoBitmap!=null){
+
+                // call the loading class
+                val loading =LoadingDialog(this)
+                loading.startLoading()
+                val handler = Handler(Looper.getMainLooper())
+
+                handler.post {
+                    // Run the prediction model on the photoBitmap and get the result
+                    val predictionResult = runPredictionModel(photoBitmap)
+
+                    resultTextView.text = labels[predictionResult].toString()
+                    val words = labels[predictionResult].toString()
+                    loading.isDismiss()
 
                 //share
                 val baseUrl = "https://en.wikipedia.org/wiki/"
@@ -188,7 +195,7 @@ class result_activity: AppCompatActivity() {
                         }
 
                     }
-                })
+                })}
             }
         }
     }

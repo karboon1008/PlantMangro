@@ -56,7 +56,7 @@ class SQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null
             cursor = db.rawQuery(selectQuery,null)
             try {
                 val field: Field = CursorWindow::class.java.getDeclaredField("sCursorWindowSize")
-                field.setAccessible(true)
+                field.isAccessible = true
                 field.set(null, 100 * 1024 * 1024) //the 100MB is the new size
             } catch (e: java.lang.Exception) {
                 e.printStackTrace()

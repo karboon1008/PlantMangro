@@ -48,11 +48,6 @@
             android:parentActivityName=".MainActivity"/>
 
         <activity
-            android:name=".fragment_result"
-            android:exported="false"
-            android:parentActivityName=".MainActivity"/>
-
-        <activity
             android:name=".result_activity"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
