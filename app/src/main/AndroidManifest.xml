@@ -30,7 +30,9 @@
 
         <activity
             android:name=".CustomCameraActivity"
-            android:label="Custom Camera" />
+            android:label="Custom Camera"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".DetailedActivity"
             android:exported="false"
@@ -44,6 +46,17 @@
             android:name=".CollectionPage"
             android:exported="false"
             android:parentActivityName=".MainActivity"/>
+
+        <activity
+            android:name=".fragment_result"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
+
+        <activity
+            android:name=".result_activity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
+
 
         <activity
             android:name=".MainActivity"

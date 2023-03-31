@@ -2,17 +2,20 @@ package com.example.recycleviewwithclicklistener
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -23,7 +26,9 @@ import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -36,7 +41,6 @@ typealias LumaListener = (luma: Double) -> Unit
 class CustomCameraActivity : AppCompatActivity() {
 
     private var imageCapture: ImageCapture? = null
-
     private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +50,7 @@ class CustomCameraActivity : AppCompatActivity() {
         // Request camera permissions
         if (allPermissionsGranted()) {
             startCamera()
+
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
@@ -56,8 +61,25 @@ class CustomCameraActivity : AppCompatActivity() {
             takePhoto()
         }
 
+        findViewById<Button>(R.id.snaptips).setOnClickListener{
+            // Create a layout inflater to inflate the dialog layout
+            val inflater = LayoutInflater.from(this)
+            val dialogLayout = inflater.inflate(R.layout.popout, null)
+
+            // Create an alert dialog with the dialog layout
+            val builder = AlertDialog.Builder(this)
+            builder.setView(dialogLayout)
+            builder.setPositiveButton("Got it!") { dialog, which ->
+                // Do something when the "OK" button is clicked
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+
         cameraExecutor = Executors.newSingleThreadExecutor()
+
     }
+
 
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
@@ -96,35 +118,11 @@ class CustomCameraActivity : AppCompatActivity() {
                     Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                     Log.d(TAG, msg)
 
-                    val file = File(getExternalFilesDir(null), "$name.jpg")
-                    val uri: Uri = FileProvider.getUriForFile(baseContext, "com.example.recycleviewwithclicklistener.provider", file)
-
                     val savedUri = output.savedUri ?: return
-                    val `is` = contentResolver.openInputStream(savedUri)
-                    val bitmap = BitmapFactory.decodeStream(`is`)
-                    `is`!!.close()
 
-                    // Specify the new width and height of the scaled bitmap
-                    val scaledWidth = bitmap.width / 2
-                    val scaledHeight = bitmap.height / 2
-
-                    // Create the scaled bitmap using the createScaledBitmap method
-                    val scaledBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false)
-
-                    // Create a new fragment and pass the imageBitmap to it
-                    val fragment = fragment_result.newInstance(scaledBitmap)
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.contaier, fragment)
-                        .addToBackStack(null)
-                        .commit()
-
-                    val preview = findViewById<PreviewView>(R.id.viewFinder)
-                    val cameraButton = findViewById<Button>(R.id.camera_capture_button)
-                    val STbtn = findViewById<Button>(R.id.snaptips)
-
-                    preview.visibility = View.INVISIBLE
-                    cameraButton.visibility = View.INVISIBLE
-                    STbtn.visibility = View.INVISIBLE
+                    val intent = Intent(this@CustomCameraActivity, result_activity::class.java)
+                    intent.putExtra("image", savedUri.toString())
+                    startActivity(intent)
                 }
 
             }

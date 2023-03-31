@@ -1,31 +1,19 @@
 package com.example.recycleviewwithclicklistener
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.hardware.Camera
-import android.os.Environment
-import android.view.Gravity
-import android.view.SurfaceHolder
-import android.view.SurfaceView
-import android.widget.*
-import androidx.core.view.isInvisible
-import java.io.File
-import java.io.FileOutputStream
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class WelcomePage : AppCompatActivity() {
 
@@ -44,6 +32,7 @@ class WelcomePage : AppCompatActivity() {
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var sqLiteHelper: SQLiteHelper
     private lateinit var recyclerView: RecyclerView
     private lateinit var mangrovelist: ArrayList<Mangrove>
     private lateinit var mangroveAdapter:MangroveAdapter
@@ -51,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        sqLiteHelper = SQLiteHelper(this)
 
         val cameraButton = findViewById<Button>(R.id.camera)
         cameraButton.setOnClickListener {
@@ -79,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                     val intent = Intent(this, CollectionPage::class.java)
                     startActivity(intent)
+                    getMangrove()
                     true
                 }
                 else -> false
@@ -88,6 +80,10 @@ class MainActivity : AppCompatActivity() {
         init()
     }
 
+    private fun getMangrove(){
+        val mgList = sqLiteHelper.getAllMangrove()
+        Log.e("pppp","${mgList.size}")
+    }
     private fun init() {
         recyclerView = findViewById(R.id.recycler_view)
         recyclerView.setHasFixedSize(true)
@@ -123,18 +119,9 @@ class MainActivity : AppCompatActivity() {
             val imageStream = selectedImageUri?.let { contentResolver.openInputStream(it) }
             val imageBitmap = BitmapFactory.decodeStream(imageStream)
 
-            // Create a new fragment and pass the imageBitmap to it
-            val fragment = fragment_result.newInstance(imageBitmap)
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
-                .addToBackStack(null)
-                .commit()
-            recyclerView.visibility = View.INVISIBLE
-
-            val cameraButton = findViewById<Button>(R.id.camera)
-            val galleryButton = findViewById<Button>(R.id.gallery)
-            cameraButton.visibility = View.INVISIBLE
-            galleryButton.visibility = View.INVISIBLE
+            val intent = Intent(this, result_activity::class.java)
+            intent.putExtra("image", selectedImageUri.toString())
+            startActivity(intent)
 
 
         }
