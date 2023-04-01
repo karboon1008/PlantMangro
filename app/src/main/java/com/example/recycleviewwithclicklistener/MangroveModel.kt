@@ -6,6 +6,7 @@ import java.util.*
 data class MangroveModel(
     var id:Int= getAutoId(),
     var name: String ="",
+    var date:String="",
     var image: ByteArray
 ){
     companion object{

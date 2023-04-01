@@ -18,12 +18,13 @@ class SQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null
         private const val ID = "id"
         private const val NAME = "name"
         private const val IMAGE = "image"
+        private const val DATE = "date"
 
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
         val createTblMangrove = ("CREATE TABLE "+ TBL_MANGROVE + "("
-                + ID + " INTEGER PRIMARY KEY, " + NAME + " TEXT, " +  IMAGE + " BLOB" + ")")
+                + ID + " INTEGER PRIMARY KEY, " + NAME + " TEXT, " + DATE + " TEXT, " +  IMAGE + " BLOB" + ")")
         db?.execSQL(createTblMangrove)
 
     }
@@ -39,6 +40,7 @@ class SQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null
         val contentValues = ContentValues()
         contentValues.put(ID,mg.id)
         contentValues.put(NAME,mg.name)
+        contentValues.put(DATE,mg.date)
         contentValues.put(IMAGE,mg.image)
 
         val success = db.insert(TBL_MANGROVE, "id="+ mg.id , contentValues)
@@ -69,17 +71,20 @@ class SQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null
 
         var id:Int
         var name:String
+        var date:String
         var image: ByteArray
+
 
         if(cursor.moveToFirst()){
             do{
                 id=cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                 name=cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                date=cursor.getString(cursor.getColumnIndexOrThrow("date"))
                 image=cursor.getBlob(cursor.getColumnIndexOrThrow("image"))
 
-                val mg = MangroveModel(id=id, name=name, image=image)
-
+                val mg = MangroveModel(id=id, name=name, date=date, image=image)
                 mgList.add(mg)
+
             }while (cursor.moveToNext())
         }
         return mgList

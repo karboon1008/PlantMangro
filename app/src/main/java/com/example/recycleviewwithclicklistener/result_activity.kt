@@ -27,6 +27,8 @@ import org.tensorflow.lite.support.image.ops.ResizeOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class result_activity: AppCompatActivity() {
@@ -171,13 +173,19 @@ class result_activity: AppCompatActivity() {
                             if(name.isEmpty()){
                                 Toast.makeText(this@result_activity,"Something wrong with result", Toast.LENGTH_SHORT).show()
                             }else{
-
                                 val stream = ByteArrayOutputStream()
                                 photoBitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
                                 val image = stream.toByteArray()
 
-                                val mg = MangroveModel(name= name, image = image)
+                                // Get the current date
+                                val currentDate = Date()
+                                // Format the date as a string
+                                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                                val dateString = dateFormat.format(currentDate)
+
+                                val mg = MangroveModel(name= name, date=dateString, image = image)
                                 val status = sqLiteHelper.insertMangrove(mg)
+
                                 //Check insert success of not success
                                 if(status>-1){
                                     Toast.makeText(this@result_activity,"Mangrove Added...", Toast.LENGTH_SHORT).show()

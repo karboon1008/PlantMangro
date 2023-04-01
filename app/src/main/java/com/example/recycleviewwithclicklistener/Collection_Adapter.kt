@@ -41,12 +41,14 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
     class CollectionViewHolder(var view:View):RecyclerView.ViewHolder(view){
         //private var id =view.findViewById<TextView>(R.id.tvId)
         private var name =view.findViewById<TextView>(R.id.tvName)
+        private var date =view.findViewById<TextView>(R.id.date)
         private var image=view.findViewById<ImageView>(R.id.saved_image)
         var btnDelete =view.findViewById<Button>(R.id.btn_delete)
 
         fun bindView(mg:MangroveModel) {
             //id.text = mg.id.toString()
             name.text = mg.name
+            date.text = mg.date
 
             //val bitmap = convertByteArrayToBitmap(mg.image)
             val imageBitmap = BitmapFactory.decodeByteArray(mg.image, 0, mg.image.size)

@@ -1,15 +1,22 @@
 package com.example.recycleviewwithclicklistener
 
+import android.app.SearchableInfo
+import android.app.appsearch.AppSearchManager.SearchContext
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.SearchView.SearchAutoComplete
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MangroveAdapter(private val mangrovelist: ArrayList<Mangrove>)
-    : RecyclerView.Adapter<MangroveAdapter.MangroveViewHolder>(){
+    : RecyclerView.Adapter<MangroveAdapter.MangroveViewHolder>(),Filterable{
 
     var onItemClick : ((Mangrove) -> Unit)? = null
 
@@ -39,4 +46,39 @@ class MangroveAdapter(private val mangrovelist: ArrayList<Mangrove>)
     override fun getItemCount(): Int {
         return mangrovelist.size
     }
+
+    private var filteredDataList: List<Mangrove> = mangrovelist
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val query = constraint.toString().toLowerCase(Locale.getDefault()).trim()
+                filteredDataList = if (query.isEmpty()) {
+                    mangrovelist
+                } else {
+                    mangrovelist.filter { it.name.toLowerCase(Locale.getDefault()).contains(query) }
+                }
+                val filterResults = FilterResults()
+                filterResults.values = filteredDataList
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredDataList = results?.values as List<Mangrove>
+                notifyDataSetChanged()
+            }
+        }
+    }
+    var filteredMangrovelist: MutableList<Mangrove> = mutableListOf()
+    fun updateList(newList: MutableList<Mangrove>) {
+        mangrovelist.clear()
+        mangrovelist.addAll(newList)
+        filteredMangrovelist.clear()
+        filteredMangrovelist.addAll(newList)
+        notifyDataSetChanged()
+    }
+
+
+
+
 }
