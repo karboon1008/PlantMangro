@@ -1,6 +1,9 @@
 # Mangrove Plant Identification Mobile Application 
 
-![Home Screen](Homescreen.jpg)
+<p align="center">
+  <img src="Homescreen.png" width="350" title="Home Screen">
+</p>
+
 The MangroveID is a powerful tool for mangrove plant enthusiasts that can help identify the species of a leaf just by taking a photo.
 
 The app uses deep learning algorithms and image processing techniques to accurately predict the species of the leaf. The app is developed using the Kotlin programming language in Android Studio, which provides a user-friendly interface and seamless functionality. Once the app is installed on the user's mobile device, it can access the device's camera to capture an image of the leaf.
