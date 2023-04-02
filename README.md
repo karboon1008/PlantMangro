@@ -1,7 +1,7 @@
 # Mangrove Plant Identification Mobile Application 
 
 <p align="center">
-  <img src="Homescreen.png" width="350" title="Home Screen">
+  <img src="Homescreen.jpg" width="350" title="Home Screen">
 </p>
 
 The MangroveID is a powerful tool for mangrove plant enthusiasts that can help identify the species of a leaf just by taking a photo.
