@@ -17,10 +17,10 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.example.recycleviewwithclicklistener.ml.VggComplex8020Converted
-import com.example.recycleviewwithclicklistener.ml.VggWhite8020Converted
+import com.example.recycleviewwithclicklistener.ml.*
 import kotlinx.coroutines.delay
 import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
@@ -210,10 +210,11 @@ class result_activity: AppCompatActivity() {
 
 
     val imageProcessor = ImageProcessor.Builder()
-        // Normalize the image
-        //.add(NormalizeOp(0.0f,225.0f))
         // Resize image to (224,224)
         .add(ResizeOp(224,224, ResizeOp.ResizeMethod.BILINEAR))
+        // Normalize the image
+        .add(NormalizeOp(0.0f,225.0f))
+        //.add(NormalizeOp(127.5f, 127.5f))
         .build()
 
 
@@ -225,7 +226,7 @@ class result_activity: AppCompatActivity() {
         tensorImage = imageProcessor.process(tensorImage)
         val background = detectBackground(photoBitmap)
         if (background == "This image has a white background") {
-            val model = VggWhite8020Converted.newInstance(this)
+            val model = Thiswhite.newInstance(this)
 
             // Creates inputs for reference.
             val inputFeature0 =
@@ -249,7 +250,7 @@ class result_activity: AppCompatActivity() {
             return maxIdx
         }
         else{
-            val model = VggComplex8020Converted.newInstance(this)
+            val model = This.newInstance(this)
 
             // Creates inputs for reference.
             val inputFeature0 =
@@ -304,7 +305,7 @@ class result_activity: AppCompatActivity() {
         for (x in 0 until width) {
             for (y in 0 until height) {
                 val color = thresholdedImage.getPixel(x, y)
-                if (color == Color.WHITE) {
+                if (color == Color.GRAY || color == Color.WHITE){
                     whitePixelCount++
                 }
             }
@@ -312,7 +313,7 @@ class result_activity: AppCompatActivity() {
         // Decide whether the background is white or complex
         val whitePixelPercentage = whitePixelCount.toFloat() / (width * height)
         val whiteBackgroundThreshold = 0.7f
-        return if (whitePixelPercentage > whiteBackgroundThreshold) {
+        return if (whitePixelPercentage > 0.5) {
             Toast.makeText(this, "This image has a white background", Toast.LENGTH_SHORT).show()
             "This image has a white background"
         } else {

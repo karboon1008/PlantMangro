@@ -39,10 +39,10 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
     }
 
     class CollectionViewHolder(var view:View):RecyclerView.ViewHolder(view){
-        //private var id =view.findViewById<TextView>(R.id.tvId)
         private var name =view.findViewById<TextView>(R.id.tvName)
         private var date =view.findViewById<TextView>(R.id.date)
         private var image=view.findViewById<ImageView>(R.id.saved_image)
+        //private var id=view.findViewById<TextView>(R.id.ID)
         var btnDelete =view.findViewById<Button>(R.id.btn_delete)
 
         fun bindView(mg:MangroveModel) {
