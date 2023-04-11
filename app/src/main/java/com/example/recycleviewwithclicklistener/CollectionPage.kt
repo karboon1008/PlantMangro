@@ -32,18 +32,18 @@ class CollectionPage : AppCompatActivity() {
         getMangroves()
 
         collectionAdapter?.setOnClickDeleteItem {
-            deleteMangrove(it.id)
+            deleteMangrove(it.date)
 
         }
 
     }
 
-    private fun deleteMangrove(id:Int){
+    private fun deleteMangrove(date:String){
         val builder = AlertDialog.Builder(this)
         builder.setMessage("Are you sure you want to delete item?")
         builder.setCancelable(true)
         builder.setPositiveButton("Yes"){dialog,_->
-            sqLiteHelper.deleteMangroveId(id)
+            sqLiteHelper.deleteMangroveDate(date)
             getMangroves()
             dialog.dismiss()
         }
@@ -61,7 +61,7 @@ class CollectionPage : AppCompatActivity() {
         collectionAdapter?.addItems(mgList)
 
     }
-    //
+
     private fun initRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.collection_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)

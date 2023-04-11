@@ -1,6 +1,5 @@
 package com.example.recycleviewwithclicklistener
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -41,18 +40,20 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
     class CollectionViewHolder(var view:View):RecyclerView.ViewHolder(view){
         private var name =view.findViewById<TextView>(R.id.tvName)
         private var date =view.findViewById<TextView>(R.id.date)
+        private var location = view.findViewById<TextView>(R.id.location)
         private var image=view.findViewById<ImageView>(R.id.saved_image)
-        //private var id=view.findViewById<TextView>(R.id.ID)
         var btnDelete =view.findViewById<Button>(R.id.btn_delete)
 
         fun bindView(mg:MangroveModel) {
-            //id.text = mg.id.toString()
             name.text = mg.name
             date.text = mg.date
+            val latlng = (mg.latitude).toString() + ", " + (mg.longitude).toString()
+            location.text =  latlng
 
             //val bitmap = convertByteArrayToBitmap(mg.image)
             val imageBitmap = BitmapFactory.decodeByteArray(mg.image, 0, mg.image.size)
             image.setImageBitmap(imageBitmap)
+
 
         }
 

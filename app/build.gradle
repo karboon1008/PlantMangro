@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -49,6 +50,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.4'
     implementation 'androidx.room:room-common:2.5.1'
     implementation 'androidx.room:room-ktx:2.5.1'
+    implementation 'com.google.android.gms:play-services-location-license:12.0.1'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+    implementation 'com.google.maps.android:maps-utils-ktx:2.2.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+
 
     def camerax_version = "1.1.0-beta01"
     implementation "androidx.camera:camera-core:${camerax_version}"

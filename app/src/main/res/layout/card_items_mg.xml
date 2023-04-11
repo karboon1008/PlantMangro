@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/cardview_shadow_end_color"
+    android:background="#F3F5F5"
     android:padding="16dp"
     android:weightSum="1">
 
@@ -42,6 +42,15 @@
                 android:id="@+id/date"
                 android:textSize="14sp"
                 android:text="Details">
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:id="@+id/location"
+                android:textSize="14sp"
+                android:text="Location">
             </TextView>
 
         </LinearLayout>

@@ -1,23 +1,30 @@
 package com.example.recycleviewwithclicklistener
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.view.View
+import android.view.LayoutInflater
 import android.view.ViewTreeObserver
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.drawToBitmap
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import com.example.recycleviewwithclicklistener.ml.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.delay
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.common.ops.NormalizeOp
@@ -28,24 +35,42 @@ import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
 
 
 class result_activity: AppCompatActivity() {
     private lateinit var sqLiteHelper: SQLiteHelper
     private lateinit var photoBitmap: Bitmap
-    private lateinit var btn_add: Button
+    private lateinit var mangrovelist: ArrayList<Mangrove>
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_result)
+        setContentView(R.layout.activity_result)
+        // Inflate the second layout
+        val inflater = LayoutInflater.from(this)
+        val shareLayout = inflater.inflate(R.layout.activity_share, null)
+
+        // Initialize the mangrovelist
+        mangrovelist = ArrayList()
+        addDataToList()
+
+        // Get the parent layout of the main layout
+        val shareContainer = findViewById<FrameLayout>(R.id.framelayout)
+        // Add the second layout to the parent layout
+        shareContainer.addView(shareLayout)
+
         sqLiteHelper = SQLiteHelper(this)
+
+        //location
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         //receive uri from custom camera
         val intent = intent
         val uriString = intent.getStringExtra("image")
         val uri = Uri.parse(uriString)
-
 
         //convert uri to bitmap
         val `is` = contentResolver.openInputStream(uri)
@@ -54,8 +79,8 @@ class result_activity: AppCompatActivity() {
 
         if(bitmap.width>1024) {
             // Specify the new width and height of the scaled bitmap
-            val scaledWidth = bitmap.width / 2
-            val scaledHeight = bitmap.height / 2
+            val scaledWidth = bitmap.width / 8
+            val scaledHeight = bitmap.height / 8
 
             // Create the scaled bitmap using the createScaledBitmap method
             photoBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false)
@@ -65,37 +90,55 @@ class result_activity: AppCompatActivity() {
         }
 
         // Set the image captured to imageview
-        val photoImageView: ImageView = findViewById(R.id.result_image)
+        val photoImageView: CircleImageView = findViewById(R.id.result_image)
         photoImageView.setImageBitmap(photoBitmap)
 
         val inputStream: InputStream = this.assets.open("label_result")
         val labels = inputStream.bufferedReader().use { it.readLines() }
 
-        val predictButton: Button = findViewById(R.id.button2)
         val resultTextView: TextView =findViewById(R.id.result)
+        val description: TextView = findViewById(R.id.description)
+        val commonName: TextView = findViewById(R.id.commonName)
 
-        predictButton.setOnClickListener {
+        if(photoBitmap!=null){
 
-            if(photoBitmap!=null){
+            // call the loading class
+            val loading =LoadingDialog(this)
+            loading.startLoading()
+            val handler = Handler(Looper.getMainLooper())
 
-                // call the loading class
-                val loading =LoadingDialog(this)
-                loading.startLoading()
-                val handler = Handler(Looper.getMainLooper())
+            // loading
+            handler.post {
+                // Run the prediction model on the photoBitmap and get the result
+                val predictionResult = runPredictionModel(photoBitmap)
 
-                handler.post {
-                    // Run the prediction model on the photoBitmap and get the result
-                    val predictionResult = runPredictionModel(photoBitmap)
+                resultTextView.text = labels[predictionResult].toString()
+                val words = labels[predictionResult].toString()
+                loading.isDismiss()
 
-                    resultTextView.text = labels[predictionResult].toString()
-                    val words = labels[predictionResult].toString()
-                    loading.isDismiss()
+                // function to get the explanation and common name according to result (species)
+                fun getExplanationByName(words:String):Pair<String, String>{
+                    for(mangrove in mangrovelist){
+                        if(mangrove.name==words){
+                            val explanation = mangrove.explanation
+                            val commonName = mangrove.commonName
+                            return Pair(explanation, commonName)
+                        }
+                    }
+                    return Pair("","")
+                }
 
-                //share
+                // call the function to get description and common name from array list
+                val(data1, data2) = getExplanationByName(words)
+                description.setText(data1)
+                commonName.setText(data2)
+
+                // link to wiki
                 val baseUrl = "https://en.wikipedia.org/wiki/"
                 val queryString = "$words"
                 val url = baseUrl + queryString
 
+                // link to wiki when click on image
                 photoImageView.setOnClickListener {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                     startActivity(intent)
@@ -103,13 +146,13 @@ class result_activity: AppCompatActivity() {
 
                 val cardViewContainer: LinearLayout = findViewById(R.id.cardViewContainer)
                 val cardView: CardView = cardViewContainer.findViewById(R.id.cardview)
-                val imageView: ImageView = cardView.findViewById(R.id.cardview_image)
-                val textView: TextView = cardView.findViewById(R.id.cardview_text)
+                val cardimageView: ImageView = cardView.findViewById(R.id.cardview_image)
+                val cardtextView: TextView = cardView.findViewById(R.id.cardview_text)
                 val quote: TextView = cardView.findViewById(R.id.cardview_quote)
                 val shareBtn: Button = findViewById(R.id.shareBtn)
                 val collectionBtn: Button = findViewById(R.id.collectionBtn)
 
-
+                // textlist for sharing quote
                 val textList = listOf("\"Mangroves are not just trees, they are an ecosystem and they have been protecting us for thousands of years. When we protect them, we protect ourselves and our future.\" - Angélica María García Arzola, Mexican conservationist and community organizer.",
                     "\"Mangroves are the cornerstone of the coastal ecosystem, their root systems preventing erosion, filtering out pollution and providing a vital habitat for wildlife.\" - Richard Branson",
                     "\"Mangroves provide essential goods and services, like protecting our coasts from storms and sea level rise, improving water quality, and providing habitat for fish and wildlife.\" - The Nature Conservancy",
@@ -134,12 +177,13 @@ class result_activity: AppCompatActivity() {
                     "\"Mangrove forests are among the most productive ecosystems on earth, with a high level of biodiversity and a variety of ecosystem services.\" - Yale Environment 360"
                 ) // Add all the quotes to assign to the TextViews to a list
 
+                // set the text and image on sharing card
                 val randomText = textList.random() // Generate a random text string from the text list
                 quote.text = randomText
+                cardimageView.setImageBitmap(photoBitmap)
+                cardtextView.text = labels[predictionResult].toString()
 
-                imageView.setImageBitmap(photoBitmap)
-                textView.text = labels[predictionResult].toString()
-
+                // cardView for sharing card
                 cardViewContainer.viewTreeObserver.addOnGlobalLayoutListener(object :
                     ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
@@ -148,8 +192,8 @@ class result_activity: AppCompatActivity() {
                         // // Load content into imageView and textView here
                         val bitmap = cardViewContainer.drawToBitmap()
 
+                        // share
                         shareBtn.setOnClickListener {
-                            // Do something with the bitmap
                             val intent = Intent(Intent.ACTION_SEND)
                             intent.type = "image/*"
                             val bytes = ByteArrayOutputStream()
@@ -167,6 +211,8 @@ class result_activity: AppCompatActivity() {
                             startActivity(Intent.createChooser(intent, "Share Image"))
                         }
 
+                        // add the mangrove into local database
+                        @RequiresApi(Build.VERSION_CODES.O)
                         fun addMangrove(){
                             val name = labels[predictionResult].toString()
 
@@ -178,37 +224,75 @@ class result_activity: AppCompatActivity() {
                                 val image = stream.toByteArray()
 
                                 // Get the current date
-                                val currentDate = Date()
+                                val calendar = Calendar.getInstance()
+                                val currentDateTime = calendar.time
+
                                 // Format the date as a string
-                                val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                                val dateString = dateFormat.format(currentDate)
+                                val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault())
+                                val dateString = dateFormat.format(currentDateTime)
 
-                                val mg = MangroveModel(name= name, date=dateString, image = image)
-                                val status = sqLiteHelper.insertMangrove(mg)
+                                // get current location
+                                fun getLocation(callback: (String) -> Unit) {
+                                    if (ContextCompat.checkSelfPermission(
+                                            this@result_activity,
+                                            Manifest.permission.ACCESS_FINE_LOCATION
+                                        ) != PackageManager.PERMISSION_GRANTED
+                                    ) {
+                                        ActivityCompat.requestPermissions(
+                                            this@result_activity,
+                                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                            101)
+                                    }
+                                    val location = fusedLocationProviderClient.lastLocation
+                                    location.addOnSuccessListener {
+                                        if(it != null){
+                                            val latlong = "${it.latitude},${it.longitude}"
+                                            callback(latlong)
+                                        }
+                                    }
+                                }
 
-                                //Check insert success of not success
-                                if(status>-1){
-                                    Toast.makeText(this@result_activity,"Mangrove Added...", Toast.LENGTH_SHORT).show()
-                                }else{
-                                    Toast.makeText(this@result_activity,"Record not saved...", Toast.LENGTH_SHORT).show()
+                                getLocation { location ->
+                                    // Use the location string here
+                                    val loca =  location
+                                    val localist = loca.split(",")
+                                    val latitude = localist[0]
+                                    val longitude = localist[1]
+
+                                    //add the data into the data class
+                                    val mg = MangroveModel(name= name, date=dateString, latitude = latitude, longitude = longitude, image = image)
+                                    val status = sqLiteHelper.insertMangrove(mg)
+
+                                    //Check insert success of not success
+                                    if(status>-1){
+                                        Toast.makeText(this@result_activity,"Mangrove Added...", Toast.LENGTH_SHORT).show()
+                                    }else{
+                                        Toast.makeText(this@result_activity,"Record not saved...", Toast.LENGTH_SHORT).show()
+                                    }
                                 }
                             }
                         }
 
+                        // add to collection
+                        collectionBtn.setOnClickListener {
+                            // call the loading class
+                            val loading =LoadingDialog(this@result_activity)
+                            loading.startLoading()
+                            val handler = Handler(Looper.getMainLooper())
 
-                        collectionBtn.setOnClickListener{
-                            collectionBtn.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_baseline_check_24))
-                            addMangrove()
+                            handler.post {
+                                addMangrove()
+                                loading.isDismiss()
+                            }
 
                         }
-
                     }
-                })}
-            }
+                    }
+                ) }
         }
     }
 
-
+    // pre-processing the image
     val imageProcessor = ImageProcessor.Builder()
         // Resize image to (224,224)
         .add(ResizeOp(224,224, ResizeOp.ResizeMethod.BILINEAR))
@@ -218,6 +302,7 @@ class result_activity: AppCompatActivity() {
         .build()
 
 
+    // predict species
     private fun runPredictionModel(photoBitmap: Bitmap): Int {
         var tensorImage =  TensorImage(DataType.FLOAT32)
         // pass bitmap
@@ -272,6 +357,8 @@ class result_activity: AppCompatActivity() {
             return maxIdx
         }
     }
+
+    // detect background (white or complex)
     fun detectBackground(image: Bitmap): String {
         // Convert the image to grayscale
         val width = image.width
@@ -322,4 +409,22 @@ class result_activity: AppCompatActivity() {
         }
 
     }
+
+    // add data to arraylist to retrieve
+    private fun addDataToList(){
+        mangrovelist.add(Mangrove(R.drawable.amarina, "Avicennia marina", "Api-api Jambu","Also known as Api-api Jambu, is a mangrove tree. Unlike other species, the young branches of Api-api Jambu is distinctly square shaped. The fruit is greyish green with a short beak at the tip.","Salt-tolerant mangrove with multiple ecological benefits."))
+        mangrovelist.add(Mangrove(R.drawable.aofficinalis, "Avicennia officinalis", "Api Api Ludat", "Also known as Api Api Ludat, is a mangrove tree. It has large orange-yellow flowers that smell rancid. The leaves are oblong shaped and the underside are distinctly yellowish green.", "Medicinal, salt-tolerant mangrove species."))
+        mangrovelist.add(Mangrove(R.drawable.bsexangula, "Bruguiera sexangula","Tumu Mata Buaya" , "A mangrove tree species that is commonly found in the coastal regions of Southeast Asia, including India, Bangladesh, and Sri Lanka. It is a salt-tolerant plant that grows in mudflats and tidal creeks and provides important habitats for various species of wildlife, including fish, crustaceans, and birds. B. sexangula is also known for its strong, durable wood and is used for construction, fuel, and other purposes.", "Dense, saltwater-tolerant mangrove species."))
+        mangrovelist.add(Mangrove(R.drawable.rapiculata, "Rhizophora apiculata","Bakau Minyak" ,"Also known as the mangrove red apple, is a species of mangrove tree native to Southeast Asia. It is commonly found in tidal mudflats and intertidal zones, and is known for its remarkable ability to survive in harsh coastal environments. The tree produces a red fruit that is important to wildlife, and provides essential habitat and protection for many species of marine life.", "Mangrove tree with red aerial roots."))
+        mangrovelist.add(Mangrove(R.drawable.scaseolaris, "Sonneratia caseolaris", "Berembang", "A mangrove plant species with aerial prop roots, leathery leaves, and fragrant white flowers that bloom at night. It has salt-tolerant adaptations and is used in traditional medicine and as a source of food and fuel in coastal areas.", "Salt-tolerant mangrove plant with edible fruit"))
+    }
+
+    //crop the image to certain width and height
+    fun cropBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
+        val x = (bitmap.width - width) / 2
+        val y = (bitmap.height - height) / 2
+        return Bitmap.createBitmap(bitmap, x, y, width, height)
+    }
+
+
 }

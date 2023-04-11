@@ -12,4 +12,20 @@
         android:icon="@drawable/ic_baseline_bookmark_24"
         android:title="Collection" />
 
+    <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/ic_baseline_map_24"
+        android:title="Map" />
+
+    <item
+        android:id="@+id/navigation_contact"
+        android:icon="@drawable/ic_baseline_call_24"
+        android:title="Contact" />
+
+
+    <item
+        android:id="@+id/navigation_guideline"
+        android:icon="@drawable/ic_baseline_help_24"
+        android:title="Help" />
+
 </menu>
