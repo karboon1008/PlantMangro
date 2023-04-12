@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.google.android.gms.maps.model.LatLng
 import java.lang.reflect.Field
+import java.sql.Blob
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -107,11 +108,12 @@ class SQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null
         return success
     }
 
-    fun getLocationMangrove(): Pair<ArrayList<String>,ArrayList<LatLng>>{
+    fun getLocationMangrove(): Triple<ArrayList<String>,ArrayList<LatLng>,ArrayList<ByteArray>>{
         val mgLocationList:ArrayList<LatLng> = ArrayList()
         val namelist:ArrayList<String> = ArrayList()
+        val imagelist:ArrayList<ByteArray> = ArrayList()
 
-        val selectQuery = "SELECT NAME,LATITUDE, LONGITUDE FROM $TBL_MANGROVE"
+        val selectQuery = "SELECT NAME,LATITUDE, LONGITUDE, IMAGE FROM $TBL_MANGROVE"
         val db = this.readableDatabase
 
         val cursor = db.rawQuery(selectQuery,null)
@@ -120,12 +122,14 @@ class SQLiteHelper(context: Context):SQLiteOpenHelper(context,DATABASE_NAME,null
             while(cursor.moveToNext()) {
                 val location = LatLng(cursor.getString(cursor.getColumnIndexOrThrow("latitude")).toDouble(), cursor.getString(cursor.getColumnIndexOrThrow("longitude")).toDouble())
                 val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val image = cursor.getBlob(cursor.getColumnIndexOrThrow("image"))
                 mgLocationList.add(location)
                 namelist.add(name)
+                imagelist.add(image)
             }
             cursor.close()
         }
-        return Pair(namelist,mgLocationList)
+        return Triple(namelist,mgLocationList,imagelist)
     }
 }
 

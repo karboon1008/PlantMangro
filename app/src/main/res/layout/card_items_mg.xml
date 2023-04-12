@@ -57,17 +57,22 @@
 
     </LinearLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete"
-        android:id="@+id/btn_delete"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:textAllCaps="false"
-        >
+        android:orientation="vertical">
 
-    </Button>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:id="@+id/btn_delete"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textAllCaps="false">
+        </Button>
+
+    </LinearLayout>
 
 
 </LinearLayout>

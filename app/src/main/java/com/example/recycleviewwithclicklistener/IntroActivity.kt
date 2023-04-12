@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.viewpager2.widget.ViewPager2
 
+
 class IntroActivity :AppCompatActivity() {
 
     private val introSliderAdapter = IntroSliderAdapter(
@@ -38,6 +39,7 @@ class IntroActivity :AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.introslider)
         supportActionBar?.hide()
+
         val introSliderViewPage: ViewPager2 = findViewById(R.id.introSliderViewPager)
         introSliderViewPage.adapter = introSliderAdapter
         setupIndicators()
@@ -50,6 +52,7 @@ class IntroActivity :AppCompatActivity() {
                 setCurrentIndicator(position)
             }
         })
+
         val Nextbtn: Button = findViewById(R.id.Nextbtn)
         val textSkipIntro: TextView = findViewById(R.id.textSkipIntro)
         Nextbtn.setOnClickListener{

@@ -8,7 +8,6 @@ class Guideline : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.guideline_app)
 
-
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = "Guideline"
 

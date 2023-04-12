@@ -55,7 +55,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.maps.android:maps-utils-ktx:2.2.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
 
 
     def camerax_version = "1.1.0-beta01"
@@ -63,7 +63,6 @@ dependencies {
     implementation "androidx.camera:camera-camera2:${camerax_version}"
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     implementation "androidx.camera:camera-video:${camerax_version}"
-
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
 

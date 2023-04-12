@@ -1,5 +1,6 @@
 package com.example.recycleviewwithclicklistener
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,13 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
 
     private var mgList:ArrayList<MangroveModel> = ArrayList()
     private var onClickDeleteItem: ((MangroveModel) -> Unit)? = null
+    private var listener: OnItemClickListener? = null
+
+
+
+    interface OnItemClickListener {
+        fun onItemClick(mg: MangroveModel)
+    }
 
 
     fun addItems(items:ArrayList<MangroveModel>){
@@ -23,6 +31,12 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
     fun setOnClickDeleteItem(callback:(MangroveModel)->Unit){
         this.onClickDeleteItem = callback
     }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CollectionViewHolder((
             LayoutInflater.from(parent.context).inflate(R.layout.card_items_mg,parent,false))
     )
@@ -30,6 +44,7 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
     override fun onBindViewHolder(holder: CollectionViewHolder, position: Int) {
         val mg = mgList[position]
         holder.bindView(mg)
+        holder.itemView.setOnClickListener { listener?.onItemClick(mg) }
         holder.btnDelete.setOnClickListener{onClickDeleteItem?.invoke(mg)}
     }
 
@@ -37,25 +52,38 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
         return mgList.size
     }
 
-    class CollectionViewHolder(var view:View):RecyclerView.ViewHolder(view){
-        private var name =view.findViewById<TextView>(R.id.tvName)
-        private var date =view.findViewById<TextView>(R.id.date)
-        private var location = view.findViewById<TextView>(R.id.location)
-        private var image=view.findViewById<ImageView>(R.id.saved_image)
-        var btnDelete =view.findViewById<Button>(R.id.btn_delete)
+    inner class CollectionViewHolder(var view:View):RecyclerView.ViewHolder(view) {
 
-        fun bindView(mg:MangroveModel) {
+        private var name = view.findViewById<TextView>(R.id.tvName)
+        private var date = view.findViewById<TextView>(R.id.date)
+        private var location = view.findViewById<TextView>(R.id.location)
+        private var image = view.findViewById<ImageView>(R.id.saved_image)
+        var btnDelete = view.findViewById<Button>(R.id.btn_delete)
+
+        fun bindView(mg: MangroveModel) {
             name.text = mg.name
             date.text = mg.date
             val latlng = (mg.latitude).toString() + ", " + (mg.longitude).toString()
-            location.text =  latlng
+            location.text = latlng
+
 
             //val bitmap = convertByteArrayToBitmap(mg.image)
             val imageBitmap = BitmapFactory.decodeByteArray(mg.image, 0, mg.image.size)
             image.setImageBitmap(imageBitmap)
 
-
         }
 
+        init {
+            view.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val mg = mgList[position]
+                    listener?.onItemClick(mg)
+                }
+            }
+        }
+
+
     }
+
 }

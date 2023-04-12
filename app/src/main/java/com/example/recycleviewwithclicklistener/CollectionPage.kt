@@ -36,6 +36,19 @@ class CollectionPage : AppCompatActivity() {
 
         }
 
+        collectionAdapter?.setOnItemClickListener(object : CollectionAdapter.OnItemClickListener {
+            override fun onItemClick(mg: MangroveModel) {
+                val intent = Intent(this@CollectionPage, Collection_details::class.java)
+                intent.putExtra("name", mg.name)
+                intent.putExtra("date", mg.date)
+                intent.putExtra("latitude", mg.latitude)
+                intent.putExtra("longitude", mg.longitude)
+                intent.putExtra("image", mg.image)
+                startActivity(intent)
+            }
+        })
+
+
     }
 
     private fun deleteMangrove(date:String){
@@ -68,4 +81,6 @@ class CollectionPage : AppCompatActivity() {
         collectionAdapter = CollectionAdapter()
         recyclerView.adapter = collectionAdapter
     }
+
+
 }

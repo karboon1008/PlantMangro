@@ -419,12 +419,5 @@ class result_activity: AppCompatActivity() {
         mangrovelist.add(Mangrove(R.drawable.scaseolaris, "Sonneratia caseolaris", "Berembang", "A mangrove plant species with aerial prop roots, leathery leaves, and fragrant white flowers that bloom at night. It has salt-tolerant adaptations and is used in traditional medicine and as a source of food and fuel in coastal areas.", "Salt-tolerant mangrove plant with edible fruit"))
     }
 
-    //crop the image to certain width and height
-    fun cropBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
-        val x = (bitmap.width - width) / 2
-        val y = (bitmap.height - height) / 2
-        return Bitmap.createBitmap(bitmap, x, y, width, height)
-    }
-
 
 }

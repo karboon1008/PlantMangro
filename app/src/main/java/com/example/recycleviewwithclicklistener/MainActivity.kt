@@ -1,6 +1,7 @@
 package com.example.recycleviewwithclicklistener
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -10,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.recycleviewwithclicklistener.databinding.ActivityMainBinding
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 
@@ -20,13 +24,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var mangrovelist: ArrayList<Mangrove>
     private lateinit var mangroveAdapter:MangroveAdapter
+    lateinit var binding: ActivityMainBinding
+    lateinit var sharedPreferences: SharedPreferences
+    lateinit var prefEditor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         sqLiteHelper = SQLiteHelper(this)
         search = findViewById(R.id.idSV)
+
+        sharedPreferences = getSharedPreferences("didShowPromt", MODE_PRIVATE)
+        prefEditor = sharedPreferences.edit()
+
+        showCameraPromt()
 
         val cameraButton = findViewById<Button>(R.id.camera)
         cameraButton.setOnClickListener {
@@ -157,16 +170,102 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             val selectedImageUri = data.data
 
-            // Load the image from the Uri into a Bitmap object
-            val imageStream = selectedImageUri?.let { contentResolver.openInputStream(it) }
-
             val intent = Intent(this, result_activity::class.java)
             intent.putExtra("image", selectedImageUri.toString())
             startActivity(intent)
 
-
         }
     }
+    private fun showCameraPromt(){
+
+        if(!sharedPreferences.getBoolean("didShowPromt", false)){
+            TapTargetView.showFor(this, TapTarget.forView(binding.camera, "Custom Camera","Open the camera to take a picture of mangrove plant leaf")
+                .tintTarget(false)
+                .outerCircleColor(R.color.purple_200)
+                .textColor(R.color.teal_700),
+                object : TapTargetView.Listener() {
+                    override fun onTargetClick(view: TapTargetView?) {
+                        super.onTargetClick(view)
+                        showGalleryPrompt()
+                    }
+
+                }
+            )
+        }
+
+    }
+    private fun showGalleryPrompt(){
+        TapTargetView.showFor(this, TapTarget.forView(binding.gallery, "Gallery","Open the gallery and select one picture")
+            .tintTarget(false)
+            .outerCircleColor(R.color.purple_200)
+            .textColor(R.color.teal_700),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView?) {
+                    super.onTargetClick(view)
+                    showCollectionPrompt()
+                }
+            }
+        )
+    }
+
+    private fun showCollectionPrompt(){
+        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_collection), "Collection","Check your collection")
+            .tintTarget(false)
+            .outerCircleColor(R.color.purple_200)
+            .textColor(R.color.teal_700),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView?) {
+                    super.onTargetClick(view)
+                    showMapsPrompt()
+                }
+            }
+        )
+    }
+
+    private fun showMapsPrompt(){
+        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_map), "Maps","Check your finding's location in all around the world")
+            .tintTarget(false)
+            .outerCircleColor(R.color.purple_200)
+            .textColor(R.color.teal_700),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView?) {
+                    super.onTargetClick(view)
+                    showCallPrompt()
+                }
+            }
+        )
+    }
+
+    private fun showCallPrompt(){
+        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_contact), "Contact","Contact us when you have any question!")
+            .tintTarget(false)
+            .outerCircleColor(R.color.purple_200)
+            .textColor(R.color.teal_700),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView?) {
+                    super.onTargetClick(view)
+                    showGuidelinePrompt()
+                }
+            }
+        )
+    }
+
+    private fun showGuidelinePrompt(){
+        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_guideline), "Guideline","Refer to the guideline of how to take a picture of mangrove plant leaf")
+            .tintTarget(false)
+            .outerCircleColor(R.color.purple_200)
+            .textColor(R.color.teal_700),
+            object : TapTargetView.Listener() {
+                override fun onTargetClick(view: TapTargetView?) {
+                    super.onTargetClick(view)
+                    prefEditor = sharedPreferences.edit()
+                    prefEditor.putBoolean("didShowPromt", true)
+                    prefEditor.apply()
+                }
+            }
+        )
+    }
+
 }
 
 

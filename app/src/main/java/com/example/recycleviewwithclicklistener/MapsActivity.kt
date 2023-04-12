@@ -1,26 +1,36 @@
 package com.example.recycleviewwithclicklistener
 
 import android.Manifest
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.Editor
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.recycleviewwithclicklistener.databinding.ActivityMapsBinding
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.ui.IconGenerator
+import org.w3c.dom.Text
 import kotlin.system.measureNanoTime
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -28,7 +38,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private lateinit var sqLiteHelper: SQLiteHelper
 
     companion object{
@@ -63,52 +72,79 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.setOnMarkerClickListener(this)
 
-        val (namelist, mglolist) = sqLiteHelper.getLocationMangrove()
+        val (namelist, mglolist, imagelist) = sqLiteHelper.getLocationMangrove()
         for (i in mglolist!!.indices) {
             for (i in namelist!!.indices) {
-                val name = namelist!![i]
-                val location = mglolist[i]
-                val markerOptions = MarkerOptions()
-                    .position(location)
-                    .title(name)
+                for (i in imagelist!!.indices) {
+                    val name = namelist!![i]
+                    val location = mglolist[i]
+                    val markerOptions = MarkerOptions()
+                        .position(location)
+                        .title(name)
 
-                // set marker color based on species name
-                when (name) {
-                    "Avicennia marina" -> markerOptions.icon(
-                        BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_RED
+                    // set marker color based on species name
+                    when (name) {
+                        "Avicennia marina" -> markerOptions.icon(
+                            BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_RED
+                            )
                         )
-                    )
-                    "Avicennia officinalis" -> markerOptions.icon(
-                        BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_BLUE
+                        "Avicennia officinalis" -> markerOptions.icon(
+                            BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_BLUE
+                            )
                         )
-                    )
-                    "Bruguiera sexangula" -> markerOptions.icon(
-                        BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_ORANGE
+                        "Bruguiera sexangula" -> markerOptions.icon(
+                            BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_ORANGE
+                            )
                         )
-                    )
-                    "Rhizophora apiculata" -> markerOptions.icon(
-                        BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_GREEN
+                        "Rhizophora apiculata" -> markerOptions.icon(
+                            BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_GREEN
+                            )
                         )
-                    )
-                    "Sonneratia caseolaris" -> markerOptions.icon(
-                        BitmapDescriptorFactory.defaultMarker(
-                            BitmapDescriptorFactory.HUE_VIOLET
+                        "Sonneratia caseolaris" -> markerOptions.icon(
+                            BitmapDescriptorFactory.defaultMarker(
+                                BitmapDescriptorFactory.HUE_VIOLET
+                            )
                         )
-                    )
+                    }
+                    mMap.addMarker(markerOptions)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mglolist[i], 18f))
                 }
-                mMap.addMarker(markerOptions)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mglolist[i], 18f))
             }
         }
         setUpMap()
+        mMap.setOnMarkerClickListener { marker->
+            val title = marker.title
+            val location = marker.position
+            val dialogBuilder = AlertDialog.Builder(this)
+
+            // Create a layout inflater to inflate the dialog layout
+            val inflater = LayoutInflater.from(this@MapsActivity)
+            val dialogLayout = inflater.inflate(R.layout.popout_maps, null)
+            val image_popout_maps = dialogLayout.findViewById<ImageView>(R.id.image_popout_maps)
+            val title_popout_maps = dialogLayout.findViewById<TextView>(R.id.title_popout_maps)
+
+            // Find the index of the clicked marker in the namelist
+            val index = sqLiteHelper.getLocationMangrove().second.indexOf(location)
+
+            /* Get the image from the imagelist using the same index */
+            val image = sqLiteHelper.getLocationMangrove().third[index]
+
+            val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
+
+            image_popout_maps.setImageBitmap(bitmap)
+            title_popout_maps.setText(title)
+
+            dialogBuilder.setView(dialogLayout)
+            dialogBuilder.setPositiveButton("OK", null)
+            dialogBuilder.show()
+            true
+        }
 
     }
-
-
 
     private fun setUpMap() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -122,6 +158,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             return
         }
         mMap.isMyLocationEnabled = true
+
+        // for collection details (click on location then go to the specific location on maps)
+        val intent = intent
+        val location = intent.getStringExtra("latlng")
+        val lat_list = location?.split(",")
+        val lat = (lat_list?.get(0))?.toDouble()
+        val lng = (lat_list?.get(1))?.toDouble()
+        val latlng = lat?.let { lng?.let { it1 -> LatLng(it, it1) } }
+
+        if(latlng!=null){
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 25f))
+        }
     }
     override fun onMarkerClick(p0: Marker) = false
 
