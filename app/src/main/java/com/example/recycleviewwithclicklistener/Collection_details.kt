@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.recycleviewwithclicklistener.databinding.ActivityMainBinding
 
 class Collection_details : AppCompatActivity() {
 
@@ -14,7 +13,6 @@ class Collection_details : AppCompatActivity() {
     private lateinit var coName: TextView
     private lateinit var coDate: TextView
     private lateinit var coLocation: TextView
-    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +28,7 @@ class Collection_details : AppCompatActivity() {
 
         //receive uri from custom camera
         val intent = intent
+
         val image = intent.getByteArrayExtra("image")
         val name = intent.getStringExtra("name")
         val date = intent.getStringExtra("date")

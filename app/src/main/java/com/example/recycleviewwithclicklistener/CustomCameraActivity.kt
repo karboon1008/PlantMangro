@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.Toast
@@ -33,10 +34,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-
-
-typealias LumaListener = (luma: Double) -> Unit
-
 
 class CustomCameraActivity : AppCompatActivity() {
 
@@ -132,6 +129,11 @@ class CustomCameraActivity : AppCompatActivity() {
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
+        // Define the desired output image size
+        val width = 1920
+        val height = 1080
+
+
         cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -140,7 +142,8 @@ class CustomCameraActivity : AppCompatActivity() {
             val viewFinder = findViewById<PreviewView>(R.id.viewFinder)
             val preview = Preview.Builder().build().also{it.setSurfaceProvider(viewFinder.getSurfaceProvider())}
 
-            imageCapture = ImageCapture.Builder().build()
+            imageCapture = ImageCapture.Builder()
+                .setTargetResolution(Size(width, height)).build()
 
             // Select back camera as a default
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA

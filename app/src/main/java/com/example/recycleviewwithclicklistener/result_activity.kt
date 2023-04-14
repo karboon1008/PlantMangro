@@ -79,8 +79,8 @@ class result_activity: AppCompatActivity() {
 
         if(bitmap.width>1024) {
             // Specify the new width and height of the scaled bitmap
-            val scaledWidth = bitmap.width / 8
-            val scaledHeight = bitmap.height / 8
+            val scaledWidth = bitmap.width / 7
+            val scaledHeight = bitmap.height / 7
 
             // Create the scaled bitmap using the createScaledBitmap method
             photoBitmap = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, false)
@@ -417,6 +417,13 @@ class result_activity: AppCompatActivity() {
         mangrovelist.add(Mangrove(R.drawable.bsexangula, "Bruguiera sexangula","Tumu Mata Buaya" , "A mangrove tree species that is commonly found in the coastal regions of Southeast Asia, including India, Bangladesh, and Sri Lanka. It is a salt-tolerant plant that grows in mudflats and tidal creeks and provides important habitats for various species of wildlife, including fish, crustaceans, and birds. B. sexangula is also known for its strong, durable wood and is used for construction, fuel, and other purposes.", "Dense, saltwater-tolerant mangrove species."))
         mangrovelist.add(Mangrove(R.drawable.rapiculata, "Rhizophora apiculata","Bakau Minyak" ,"Also known as the mangrove red apple, is a species of mangrove tree native to Southeast Asia. It is commonly found in tidal mudflats and intertidal zones, and is known for its remarkable ability to survive in harsh coastal environments. The tree produces a red fruit that is important to wildlife, and provides essential habitat and protection for many species of marine life.", "Mangrove tree with red aerial roots."))
         mangrovelist.add(Mangrove(R.drawable.scaseolaris, "Sonneratia caseolaris", "Berembang", "A mangrove plant species with aerial prop roots, leathery leaves, and fragrant white flowers that bloom at night. It has salt-tolerant adaptations and is used in traditional medicine and as a source of food and fuel in coastal areas.", "Salt-tolerant mangrove plant with edible fruit"))
+    }
+
+    //crop the image to certain width and height
+    fun cropBitmap(bitmap: Bitmap, width: Int, height: Int): Bitmap {
+        val x = (bitmap.width - width) / 2
+        val y = (bitmap.height - height) / 2
+        return Bitmap.createBitmap(bitmap, x, y, width, height)
     }
 
 

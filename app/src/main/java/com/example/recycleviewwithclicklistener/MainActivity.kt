@@ -5,28 +5,47 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
+import android.view.MenuItem
+import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.recycleviewwithclicklistener.databinding.ActivityMainBinding
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var search:SearchView
     private lateinit var sqLiteHelper: SQLiteHelper
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var mangrovelist: ArrayList<Mangrove>
-    private lateinit var mangroveAdapter:MangroveAdapter
     lateinit var binding: ActivityMainBinding
     lateinit var sharedPreferences: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor
+    lateinit var toggle: ActionBarDrawerToggle
+
+    private val introSliderAdapter = IntroSliderAdapter(
+        listOf(
+            IntroSlider(
+                "Take Photo",
+                "Take a photo of mangrove plant",
+                R.drawable.take_photo
+            ),
+            IntroSlider(
+                "Prediction",
+                "Instant mangrove plant species prediction",
+                R.drawable.classification
+            ),
+            IntroSlider(
+                "Collection",
+                "Save your findings in collection for future reference",
+                R.drawable.collection
+            )
+        )
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +53,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sqLiteHelper = SQLiteHelper(this)
-        search = findViewById(R.id.idSV)
 
         sharedPreferences = getSharedPreferences("didShowPromt", MODE_PRIVATE)
         prefEditor = sharedPreferences.edit()
 
         showCameraPromt()
+
+        val introSliderViewPage: ViewPager2 = findViewById(R.id.introSliderViewPager)
+        introSliderViewPage.adapter = introSliderAdapter
+        setupIndicators()
+        setCurrentIndicator(0)
+        introSliderViewPage.registerOnPageChangeCallback(object:
+            ViewPager2.OnPageChangeCallback(){
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                setCurrentIndicator(position)
+            }
+        })
 
         val cameraButton = findViewById<Button>(R.id.camera)
         cameraButton.setOnClickListener {
@@ -54,14 +85,64 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, 100)
         }
 
+        //side drawer
+        binding.apply {
+            toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open,R.string.close)
+            drawerLayout.addDrawerListener(toggle)
+            toggle.syncState()
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
+            sideNavView.setNavigationItemSelectedListener{
+                when(it.itemId){
+                    R.id.navigation_home->{
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.navigation_collection->{
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, CollectionPage::class.java)
+                        startActivity(intent)
+                        getMangrove()
+                        true
+                    }
+                    R.id.navigation_contact -> {
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, Contact::class.java)
+                        startActivity(intent)
+                        true
+
+                    }
+                    R.id.navigation_map -> {
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, MapsActivity::class.java)
+                        startActivity(intent)
+                        true
+                    }
+
+                    R.id.navigation_guideline -> { supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, Guideline::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    R.id.navigation_mangrovedesc-> { supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, mangroveDescription::class.java)
+                        startActivity(intent)
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
                     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    recyclerView.visibility = View.VISIBLE
-                    galleryButton.visibility = View.VISIBLE
-                    cameraButton.visibility = View.VISIBLE
                     true
                 }
                 R.id.navigation_collection -> {
@@ -93,45 +174,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        init()
-        // search
-        // Declare filteredMangrovelist as a global variable
-        var filteredMangrovelist: MutableList<Mangrove> = mutableListOf()
 
-        // add data into the list
-        filteredMangrovelist.addAll(mangrovelist)
-
-        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                search.clearFocus()
-                if (query != null) {
-                    // Filter the mangrovelist based on the query
-                    val filteredList = filteredMangrovelist.filter { it.name.contains(query, true) }.toMutableList()
-
-                    if (filteredList.isNotEmpty()) {
-                        mangroveAdapter.filter.filter(query)
-                        mangroveAdapter.updateList(filteredList)
-                    } else {
-                        Toast.makeText(this@MainActivity, "No Species found..", Toast.LENGTH_LONG).show()
-                    }
-                }
-                else {
-                    Toast.makeText(this@MainActivity, "Back to original..", Toast.LENGTH_LONG).show()
-                    // If the query is empty, reset the RecyclerView to show the original list
-                    mangroveAdapter = MangroveAdapter(mangrovelist)
-                    recyclerView.adapter = mangroveAdapter
-
-                }
-                return false
-
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Filter the filteredmangrovelist based on the query
-                mangroveAdapter.updateList(filteredMangrovelist)
-                return false
-            }
-        })
     }
 
     private fun getMangrove(){
@@ -139,30 +182,7 @@ class MainActivity : AppCompatActivity() {
         Log.e("pppp","${mgList.size}")
     }
 
-    private fun init() {
-        recyclerView = findViewById(R.id.recycler_view)
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
 
-        mangrovelist = ArrayList()
-        addDataToList()
-        mangroveAdapter = MangroveAdapter(mangrovelist)
-        recyclerView.adapter = mangroveAdapter
-
-        mangroveAdapter.onItemClick = {
-            val intent = Intent(this, DetailedActivity::class.java)
-            intent.putExtra("mangrove", it)
-            startActivity(intent)
-        }
-    }
-
-    private fun addDataToList(){
-        mangrovelist.add(Mangrove(R.drawable.amarina, "Avicennia marina", "Api-api Jambu","Also known as Api-api Jambu, is a mangrove tree. Unlike other species, the young branches of Api-api Jambu is distinctly square shaped. The fruit is greyish green with a short beak at the tip.","Salt-tolerant mangrove with multiple ecological benefits."))
-        mangrovelist.add(Mangrove(R.drawable.aofficinalis, "Avicennia officinalis", "Api Api Ludat", "Also known as Api Api Ludat, is a mangrove tree. It has large orange-yellow flowers that smell rancid. The leaves are oblong shaped and the underside are distinctly yellowish green.", "Medicinal, salt-tolerant mangrove species."))
-        mangrovelist.add(Mangrove(R.drawable.bsexangula, "Bruguiera sexangula","Tumu Mata Buaya" , "A mangrove tree species that is commonly found in the coastal regions of Southeast Asia, including India, Bangladesh, and Sri Lanka. It is a salt-tolerant plant that grows in mudflats and tidal creeks and provides important habitats for various species of wildlife, including fish, crustaceans, and birds. B. sexangula is also known for its strong, durable wood and is used for construction, fuel, and other purposes.", "Dense, saltwater-tolerant mangrove species."))
-        mangrovelist.add(Mangrove(R.drawable.rapiculata, "Rhizophora apiculata","Bakau Minyak" ,"Also known as the mangrove red apple, is a species of mangrove tree native to Southeast Asia. It is commonly found in tidal mudflats and intertidal zones, and is known for its remarkable ability to survive in harsh coastal environments. The tree produces a red fruit that is important to wildlife, and provides essential habitat and protection for many species of marine life.", "Mangrove tree with red aerial roots."))
-        mangrovelist.add(Mangrove(R.drawable.scaseolaris, "Sonneratia caseolaris", "Berembang", "A mangrove plant species with aerial prop roots, leathery leaves, and fragrant white flowers that bloom at night. It has salt-tolerant adaptations and is used in traditional medicine and as a source of food and fuel in coastal areas.", "Salt-tolerant mangrove plant with edible fruit"))
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -177,12 +197,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun showCameraPromt(){
-
         if(!sharedPreferences.getBoolean("didShowPromt", false)){
             TapTargetView.showFor(this, TapTarget.forView(binding.camera, "Custom Camera","Open the camera to take a picture of mangrove plant leaf")
                 .tintTarget(false)
                 .outerCircleColor(R.color.purple_200)
-                .textColor(R.color.teal_700),
+                .textColor(R.color.white),
                 object : TapTargetView.Listener() {
                     override fun onTargetClick(view: TapTargetView?) {
                         super.onTargetClick(view)
@@ -198,7 +217,7 @@ class MainActivity : AppCompatActivity() {
         TapTargetView.showFor(this, TapTarget.forView(binding.gallery, "Gallery","Open the gallery and select one picture")
             .tintTarget(false)
             .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.teal_700),
+            .textColor(R.color.white),
             object : TapTargetView.Listener() {
                 override fun onTargetClick(view: TapTargetView?) {
                     super.onTargetClick(view)
@@ -212,7 +231,7 @@ class MainActivity : AppCompatActivity() {
         TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_collection), "Collection","Check your collection")
             .tintTarget(false)
             .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.teal_700),
+            .textColor(R.color.white),
             object : TapTargetView.Listener() {
                 override fun onTargetClick(view: TapTargetView?) {
                     super.onTargetClick(view)
@@ -226,7 +245,7 @@ class MainActivity : AppCompatActivity() {
         TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_map), "Maps","Check your finding's location in all around the world")
             .tintTarget(false)
             .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.teal_700),
+            .textColor(R.color.white),
             object : TapTargetView.Listener() {
                 override fun onTargetClick(view: TapTargetView?) {
                     super.onTargetClick(view)
@@ -240,7 +259,7 @@ class MainActivity : AppCompatActivity() {
         TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_contact), "Contact","Contact us when you have any question!")
             .tintTarget(false)
             .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.teal_700),
+            .textColor(R.color.white),
             object : TapTargetView.Listener() {
                 override fun onTargetClick(view: TapTargetView?) {
                     super.onTargetClick(view)
@@ -254,7 +273,7 @@ class MainActivity : AppCompatActivity() {
         TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_guideline), "Guideline","Refer to the guideline of how to take a picture of mangrove plant leaf")
             .tintTarget(false)
             .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.teal_700),
+            .textColor(R.color.white),
             object : TapTargetView.Listener() {
                 override fun onTargetClick(view: TapTargetView?) {
                     super.onTargetClick(view)
@@ -266,6 +285,58 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(toggle.onOptionsItemSelected(item)){
+            true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupIndicators(){
+        val indicator = arrayOfNulls<ImageView>(introSliderAdapter.itemCount)
+        val layoutParams: LinearLayout.LayoutParams =
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        layoutParams.setMargins(8,0,8,0)
+        for (i in indicator.indices){
+            indicator[i] = ImageView(applicationContext)
+            indicator[i].apply{
+                this?.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.indicator_inactive
+                    )
+                )
+                this?.layoutParams = layoutParams
+            }
+            val indicatorContainer: LinearLayout = findViewById(R.id.indicatorsContainer)
+            indicatorContainer.addView(indicator[i])
+
+        }
+    }
+    private fun setCurrentIndicator(index:Int){
+        val indicatorContainer: LinearLayout = findViewById(R.id.indicatorsContainer)
+        val childCount = indicatorContainer.childCount
+        for(i in 0 until childCount){
+            val imageView = indicatorContainer[i] as ImageView
+            if(i==index){
+                imageView.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.indicator_active
+                    )
+                )
+            }else{
+                imageView.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.indicator_inactive)
+                )
+            }
+        }
+    }
 }
 
 
