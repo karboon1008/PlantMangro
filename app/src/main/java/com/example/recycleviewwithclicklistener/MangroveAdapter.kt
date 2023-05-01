@@ -1,16 +1,12 @@
 package com.example.recycleviewwithclicklistener
 
-import android.app.SearchableInfo
-import android.app.appsearch.AppSearchManager.SearchContext
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.SearchView.SearchAutoComplete
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,7 +23,7 @@ class MangroveAdapter(private val mangrovelist: ArrayList<Mangrove>)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MangroveViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_home, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.mangrove_desc_cardview, parent, false)
         return MangroveViewHolder(view)
     }
 
@@ -39,7 +35,6 @@ class MangroveAdapter(private val mangrovelist: ArrayList<Mangrove>)
 
         holder.itemView.setOnClickListener{
             onItemClick?.invoke(mangrove)
-
         }
     }
 
@@ -70,6 +65,7 @@ class MangroveAdapter(private val mangrovelist: ArrayList<Mangrove>)
         }
     }
     var filteredMangrovelist: MutableList<Mangrove> = mutableListOf()
+
     fun updateList(newList: MutableList<Mangrove>) {
         mangrovelist.clear()
         mangrovelist.addAll(newList)
@@ -77,8 +73,4 @@ class MangroveAdapter(private val mangrovelist: ArrayList<Mangrove>)
         filteredMangrovelist.addAll(newList)
         notifyDataSetChanged()
     }
-
-
-
-
 }

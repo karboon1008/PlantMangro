@@ -18,20 +18,33 @@ class IntroActivity :AppCompatActivity() {
     private val introSliderAdapter = IntroSliderAdapter(
         listOf(
             IntroSlider(
-                "Take Photo",
-                "Take a photo of mangrove plant",
-                R.drawable.take_photo
+                "PlantMangro",
+                "Species based Identification on Mangrove Plants",
+                R.drawable.logo
             ),
             IntroSlider(
-                "Prediction",
-                "Instant mangrove plant species prediction",
-                R.drawable.classification
+                "MyCollection",
+                "Save your own photo collection for future reference",
+                R.drawable.collection_slide
             ),
             IntroSlider(
-                "Collection",
-                "Save your findings in collection for future reference",
-                R.drawable.collection
-            )
+                "Maps",
+                "Locations of Mangrove Plants in MyCollection",
+                R.drawable.location_slide
+            ),
+            IntroSlider(
+                "Mangrove Plants Description",
+                "Description of Malaysian Mangrove Plants Species",
+                R.drawable.description
+            ),
+
+            IntroSlider(
+                "Identification",
+                "App to identify Malaysian Mangrove Plants",
+                R.drawable.identify_icon
+            ),
+
+
         )
     )
 
@@ -91,7 +104,6 @@ class IntroActivity :AppCompatActivity() {
             }
             val indicatorContainer: LinearLayout = findViewById(R.id.indicatorsContainer)
             indicatorContainer.addView(indicator[i])
-
         }
     }
     private fun setCurrentIndicator(index:Int){

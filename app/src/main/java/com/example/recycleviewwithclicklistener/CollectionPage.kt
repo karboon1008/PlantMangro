@@ -25,7 +25,7 @@ class CollectionPage : AppCompatActivity() {
         setContentView(R.layout.collection)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.title = "Your Collection"
+        supportActionBar!!.title = "MyCollection"
         sqLiteHelper = SQLiteHelper(this)
 
         initRecyclerView()

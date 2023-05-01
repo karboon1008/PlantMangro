@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="180dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/purple_500">
+    android:background="@drawable/nav_head">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginStart="5dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -17,20 +17,21 @@
 
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:id="@+id/icon"
-            android:src="@drawable/mangroveicon"
+            android:src="@drawable/nav_head_icon"
             >
 
         </ImageView>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:id="@+id/title"
-            android:text="Welcome to PlantMangro"
+            android:textSize="20sp"
+            android:text="PlantMangro"
+            android:gravity="center"
             android:textColor="@color/white"
             >
         </TextView>

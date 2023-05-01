@@ -1,6 +1,5 @@
 package com.example.recycleviewwithclicklistener
 
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +37,7 @@ class CollectionAdapter :RecyclerView.Adapter<CollectionAdapter.CollectionViewHo
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CollectionViewHolder((
-            LayoutInflater.from(parent.context).inflate(R.layout.card_items_mg,parent,false))
+            LayoutInflater.from(parent.context).inflate(R.layout.card_items_collection,parent,false))
     )
 
     override fun onBindViewHolder(holder: CollectionViewHolder, position: Int) {

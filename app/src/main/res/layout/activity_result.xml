@@ -26,8 +26,7 @@
             android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_baseline_bookmark_24"
-            android:text="Save to My Collection">
+            android:drawableLeft="@drawable/ic_baseline_bookmark_24">
 
         </Button>
 
@@ -44,29 +43,76 @@
 
     </LinearLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/result_image"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/result"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Result"
-        android:textSize="22sp"
-        android:textStyle="italic|bold"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/commonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/nav"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/nav"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/result_image"
+                android:layout_width="350dp"
+                android:layout_height="350dp"
+                android:layout_marginHorizontal="30dp"
+                />
+
+            <TextView
+                android:id="@+id/result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Result"
+                android:textSize="22sp"
+                android:textStyle="italic|bold"
+                android:layout_marginVertical="20dp"
+                android:layout_marginHorizontal="30dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/click"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginHorizontal="30dp"
+                android:textColor="@color/middle_green"
+                android:text="Click the image to know more!"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/commonName"
+                android:text="commonName"
+                android:textSize="20sp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center">
+            </TextView>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="description"
+                android:textSize="18sp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/pink" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <!--For share layout-->
     <FrameLayout
@@ -77,47 +123,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/click"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/middle_green"
-        android:text="Click the image to know more!"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/result_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/commonName"
-        android:text="commonName"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/result"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:gravity="center">
-    </TextView>
-
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="description"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:background="@color/pink"
-        app:layout_constraintTop_toBottomOf="@+id/commonName"
-        app:layout_constraintVertical_bias="0.076"
-        tools:layout_editor_absoluteX="31dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -130,8 +130,8 @@ class CustomCameraActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         // Define the desired output image size
-        val width = 1920
-        val height = 1080
+        val width = 1080
+        val height = 1920
 
 
         cameraProviderFuture.addListener({

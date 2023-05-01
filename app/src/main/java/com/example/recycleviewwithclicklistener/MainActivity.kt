@@ -3,9 +3,9 @@ package com.example.recycleviewwithclicklistener
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -15,9 +15,6 @@ import androidx.core.view.get
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.recycleviewwithclicklistener.databinding.ActivityMainBinding
-import com.getkeepsafe.taptargetview.TapTarget
-import com.getkeepsafe.taptargetview.TapTargetView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,19 +27,30 @@ class MainActivity : AppCompatActivity() {
     private val introSliderAdapter = IntroSliderAdapter(
         listOf(
             IntroSlider(
-                "Take Photo",
-                "Take a photo of mangrove plant",
-                R.drawable.take_photo
+                "PlantMangro",
+                "Species based Identification on Mangrove Plants",
+                R.drawable.logo
             ),
             IntroSlider(
-                "Prediction",
-                "Instant mangrove plant species prediction",
-                R.drawable.classification
+                "MyCollection",
+                "Save your own photo collection for future reference",
+                R.drawable.collection_slide
             ),
             IntroSlider(
-                "Collection",
-                "Save your findings in collection for future reference",
-                R.drawable.collection
+                "Maps",
+                "Locations of Mangrove Plants in MyCollection",
+                R.drawable.location_slide
+            ),
+            IntroSlider(
+                "Mangrove Plants Description",
+                "Description of Malaysian Mangrove Plants Species",
+                R.drawable.description
+            ),
+
+            IntroSlider(
+                "Identification",
+                "App to identify Malaysian Mangrove Plants",
+                R.drawable.identify_slide
             )
         )
     )
@@ -52,12 +60,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Home"
+
         sqLiteHelper = SQLiteHelper(this)
 
         sharedPreferences = getSharedPreferences("didShowPromt", MODE_PRIVATE)
         prefEditor = sharedPreferences.edit()
-
-        showCameraPromt()
 
         val introSliderViewPage: ViewPager2 = findViewById(R.id.introSliderViewPager)
         introSliderViewPage.adapter = introSliderAdapter
@@ -72,19 +81,22 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val cameraButton = findViewById<Button>(R.id.camera)
-        cameraButton.setOnClickListener {
-            val intent = Intent(this, CustomCameraActivity::class.java)
-            startActivity(intent)
-        }
+        val nextTxt: TextView = findViewById(R.id.next)
+        val skipTxt: TextView = findViewById(R.id.skip)
 
-        val galleryButton = findViewById<Button>(R.id.gallery)
-        galleryButton.setOnClickListener{
-            val intent =
-                Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, 100)
+        nextTxt.setOnClickListener{
+            nextTxt.setOnClickListener{
+                if (introSliderViewPage.currentItem+1 < introSliderAdapter.itemCount){
+                        introSliderViewPage.currentItem += 1
+                }
+            }
         }
-
+        skipTxt.setOnClickListener{
+            Intent(applicationContext, Identify::class.java).also{
+                startActivity(it)
+            }
+        }
+        
         //side drawer
         binding.apply {
             toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open,R.string.close)
@@ -101,6 +113,13 @@ class MainActivity : AppCompatActivity() {
                         startActivity(intent)
                         true
                     }
+                    R.id.navigation_identify-> {
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, Identify::class.java)
+                        startActivity(intent)
+                        true
+                    }
+
                     R.id.navigation_collection->{
                         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                         val intent = Intent(this@MainActivity, CollectionPage::class.java)
@@ -110,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.navigation_contact -> {
                         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                        val intent = Intent(this@MainActivity, Contact::class.java)
+                        val intent = Intent(this@MainActivity, AboutUs::class.java)
                         startActivity(intent)
                         true
 
@@ -137,44 +156,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
-        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    true
-                }
-                R.id.navigation_collection -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    val intent = Intent(this, CollectionPage::class.java)
-                    startActivity(intent)
-                    getMangrove()
-                    true
-                }
-                R.id.navigation_contact -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    val intent = Intent(this, Contact::class.java)
-                    startActivity(intent)
-                    true
-                }
-                R.id.navigation_map -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    val intent = Intent(this, MapsActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.navigation_guideline -> {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    val intent = Intent(this, Guideline::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
-            }
-        }
-
     }
 
     private fun getMangrove(){
@@ -182,108 +163,6 @@ class MainActivity : AppCompatActivity() {
         Log.e("pppp","${mgList.size}")
     }
 
-
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            val selectedImageUri = data.data
-
-            val intent = Intent(this, result_activity::class.java)
-            intent.putExtra("image", selectedImageUri.toString())
-            startActivity(intent)
-
-        }
-    }
-    private fun showCameraPromt(){
-        if(!sharedPreferences.getBoolean("didShowPromt", false)){
-            TapTargetView.showFor(this, TapTarget.forView(binding.camera, "Custom Camera","Open the camera to take a picture of mangrove plant leaf")
-                .tintTarget(false)
-                .outerCircleColor(R.color.purple_200)
-                .textColor(R.color.white),
-                object : TapTargetView.Listener() {
-                    override fun onTargetClick(view: TapTargetView?) {
-                        super.onTargetClick(view)
-                        showGalleryPrompt()
-                    }
-
-                }
-            )
-        }
-
-    }
-    private fun showGalleryPrompt(){
-        TapTargetView.showFor(this, TapTarget.forView(binding.gallery, "Gallery","Open the gallery and select one picture")
-            .tintTarget(false)
-            .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.white),
-            object : TapTargetView.Listener() {
-                override fun onTargetClick(view: TapTargetView?) {
-                    super.onTargetClick(view)
-                    showCollectionPrompt()
-                }
-            }
-        )
-    }
-
-    private fun showCollectionPrompt(){
-        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_collection), "Collection","Check your collection")
-            .tintTarget(false)
-            .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.white),
-            object : TapTargetView.Listener() {
-                override fun onTargetClick(view: TapTargetView?) {
-                    super.onTargetClick(view)
-                    showMapsPrompt()
-                }
-            }
-        )
-    }
-
-    private fun showMapsPrompt(){
-        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_map), "Maps","Check your finding's location in all around the world")
-            .tintTarget(false)
-            .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.white),
-            object : TapTargetView.Listener() {
-                override fun onTargetClick(view: TapTargetView?) {
-                    super.onTargetClick(view)
-                    showCallPrompt()
-                }
-            }
-        )
-    }
-
-    private fun showCallPrompt(){
-        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_contact), "Contact","Contact us when you have any question!")
-            .tintTarget(false)
-            .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.white),
-            object : TapTargetView.Listener() {
-                override fun onTargetClick(view: TapTargetView?) {
-                    super.onTargetClick(view)
-                    showGuidelinePrompt()
-                }
-            }
-        )
-    }
-
-    private fun showGuidelinePrompt(){
-        TapTargetView.showFor(this, TapTarget.forView(binding.navView.findViewById(R.id.navigation_guideline), "Guideline","Refer to the guideline of how to take a picture of mangrove plant leaf")
-            .tintTarget(false)
-            .outerCircleColor(R.color.purple_200)
-            .textColor(R.color.white),
-            object : TapTargetView.Listener() {
-                override fun onTargetClick(view: TapTargetView?) {
-                    super.onTargetClick(view)
-                    prefEditor = sharedPreferences.edit()
-                    prefEditor.putBoolean("didShowPromt", true)
-                    prefEditor.apply()
-                }
-            }
-        )
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(toggle.onOptionsItemSelected(item)){
@@ -336,7 +215,25 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+        val getStarted: TextView = findViewById(R.id.getStart)
+        val bottom: LinearLayout = findViewById(R.id.bottom)
+
+        if (index == introSliderAdapter.itemCount -1) {
+            getStarted.visibility = View.VISIBLE
+            bottom.visibility = View.INVISIBLE
+
+            getStarted.setOnClickListener {
+                val intent = Intent(this@MainActivity, Identify::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+        else{
+            getStarted.visibility = View.INVISIBLE
+            bottom.visibility = View.VISIBLE
+        }
     }
+
 }
 
 

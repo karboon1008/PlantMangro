@@ -10,14 +10,24 @@
             android:title="Home" />
 
         <item
+            android:id="@+id/navigation_mangrovedesc"
+            android:icon="@drawable/ic_baseline_menu_book_24"
+            android:title="Mangrove Plants Description" />
+
+        <item
+            android:id="@+id/navigation_identify"
+            android:icon="@drawable/identify_icon"
+            android:title="Identify" />
+
+        <item
             android:id="@+id/navigation_collection"
             android:icon="@drawable/ic_baseline_bookmark_24"
-            android:title="Collection" />
+            android:title="MyCollection" />
 
         <item
             android:id="@+id/navigation_map"
             android:icon="@drawable/ic_baseline_map_24"
-            android:title="Map" />
+            android:title="Maps" />
     </group>
 
     <item
@@ -25,20 +35,15 @@
 
         <menu>
             <item
-                android:id="@+id/navigation_contact"
-                android:icon="@drawable/ic_baseline_call_24"
-                android:title="Contact" />
-
-
-            <item
                 android:id="@+id/navigation_guideline"
                 android:icon="@drawable/ic_baseline_help_24"
-                android:title="Help" />
+                android:title="ReadMe" />
 
             <item
-                android:id="@+id/navigation_mangrovedesc"
-                android:icon="@drawable/ic_baseline_menu_book_24"
-                android:title="Mangrove Plants Description" />
+                android:id="@+id/navigation_contact"
+                android:icon="@drawable/ic_baseline_people_alt_24"
+                android:title="About Us" />
+
         </menu>
     </item>
 </menu>

@@ -4,18 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Contact"
-    android:orientation="vertical">
+    tools:context=".AboutUs"
+    android:orientation="vertical"
+    android:weightSum="3">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/frim_logo"
+        android:layout_weight="1"
+        >
+
+    </ImageView>
 
     <ImageView
         android:id="@+id/LogoUM"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:src="@drawable/um_logo"
-        android:layout_marginEnd="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_weight="1"
         >
 
     </ImageView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contact us at: arpah@um.edu.my"
+        android:gravity="center"
+
+        >
+
+    </TextView>
 
 </LinearLayout>
