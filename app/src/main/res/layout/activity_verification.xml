@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".Verification">
+
+    <ImageView
+        android:id="@+id/imgTitle"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="@dimen/_60sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="TODO">
+    </ImageView>
+
+    <LinearLayout
+        android:id="@+id/verifyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="2"
+        app:layout_constraintTop_toBottomOf="@+id/imgTitle"
+        >
+
+        <TextView
+            android:id="@+id/phoneLble"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Verify +0112323223"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:textSize="@dimen/_18ssp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_700"
+            android:gravity="center"
+            android:layout_weight="1"
+            >
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter the OTP code to verify your phone number"
+            android:gravity="center"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_weight="1"
+            >
+
+        </TextView>
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/pinview"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/verifyTitle"
+        >
+    </com.google.android.material.textfield.TextInputEditText>
+
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:background="@drawable/border_button"
+        app:layout_constraintTop_toBottomOf="@+id/pinview"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        >
+
+    </Button>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

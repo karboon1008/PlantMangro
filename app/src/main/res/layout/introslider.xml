@@ -4,19 +4,19 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".IntroActivity">
+    tools:context=".Intro.IntroActivity">
 
     <TextView
         android:id="@+id/textSkipIntro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Skip Intro"
-        android:textSize="17sp"
+        android:textSize="@dimen/_15ssp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="70dp">
+        android:layout_marginBottom="@dimen/_65sdp">
     </TextView>
 
     <Button
@@ -25,19 +25,19 @@
         android:layout_height="wrap_content"
         android:text="Next"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="@dimen/_12ssp"
         android:backgroundTint="@color/middle_green"
         app:layout_constraintBottom_toTopOf="@+id/textSkipIntro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="@dimen/_10sdp">
     </Button>
 
     <LinearLayout
         android:id="@+id/indicatorsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="@dimen/_12sdp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/Nextbtn">
@@ -47,7 +47,7 @@
         android:id="@+id/introSliderViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="12dp"
+        android:layout_margin="@dimen/_12sdp"
         android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/indicatorsContainer"
         app:layout_constraintTop_toTopOf="parent">

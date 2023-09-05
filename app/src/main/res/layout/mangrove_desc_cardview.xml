@@ -5,20 +5,20 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="12dp"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="@dimen/_10sdp"
     android:id="@+id/fragment_home"
-    app:cardElevation="30dp">
+    app:cardElevation="@dimen/_30sdp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/item_image"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/_100sdp"
             android:scaleType="centerCrop"
-            android:paddingTop="2dp"
             android:src="@drawable/amarina"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,34 +26,31 @@
 
         <TextView
             android:id="@+id/item_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:text="Amarina"
-            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textSize="@dimen/_12ssp"
             android:textStyle="italic|bold"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/item_explanation"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_image"
-            app:layout_constraintVertical_bias="0.105" />
+            android:layout_margin="@dimen/_5sdp"
+            />
 
         <TextView
             android:id="@+id/item_explanation"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="Im Amarina lah haiyahh"
-            android:paddingHorizontal="15dp"
+            android:text="Im Amarina lah haiyahh, and it will be anything that i write here for example description."
+            android:paddingBottom="@dimen/_15sdp"
+            android:paddingHorizontal="@dimen/_15sdp"
             android:textAlignment="center"
             android:textStyle="italic"
-            android:textSize="14sp"
+            android:textSize="@dimen/_10ssp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/item_title"/>
 

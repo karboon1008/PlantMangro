@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "623767999958",
+    "firebase_url": "https://plantmangro-default-rtdb.firebaseio.com",
+    "project_id": "plantmangro",
+    "storage_bucket": "plantmangro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623767999958:android:9ddbd1f602bf9cb43b0077",
+        "android_client_info": {
+          "package_name": "com.example.recycleviewwithclicklistener"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "623767999958-08hs4dhffbpib61t55trge8cceiopla2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.recycleviewwithclicklistener",
+            "certificate_hash": "510a4ba396d8e1ffacb692ed3a744da4bd6c465b"
+          }
+        },
+        {
+          "client_id": "623767999958-t9f5kcnjud3hf0logtlqpe0jbv5fta21.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC9BVe8nQpkIqJA3mVpzsb8mn2_-jEuc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "623767999958-lf6hnb27vioc2n0e42f6hus06mim0sj3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Identify">
+    tools:context=".Collection.Identify">
 
     <LinearLayout
         android:background="@drawable/border_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_140sdp"
         android:id="@+id/camgal"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/snaptip">
@@ -21,27 +22,23 @@
         <Button
             android:id="@+id/camera"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:layout_weight="0.5"
-            android:background="@drawable/border_image"
-            android:drawableTop="@drawable/ic_baseline_camera_alt_24"
-            android:text="Identify" />
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_30sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginVertical="@dimen/_20sdp"
+            android:layout_weight="1"
+            android:background="@drawable/ic_baseline_camera_alt_24"
+            />
 
         <Button
             android:id="@+id/gallery"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:layout_weight="0.5"
-            android:background="@drawable/border_image"
-            android:drawableTop="@drawable/ic_baseline_photo_24"
-            android:text="Gallery" />
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginVertical="@dimen/_25sdp"
+            android:layout_weight="1"
+            android:background="@drawable/ic_baseline_photo_24"
+           />
 
     </LinearLayout>
 
@@ -62,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="20dp"
+                android:layout_margin="@dimen/_20sdp"
                 >
 
                 <TextView
@@ -70,8 +67,8 @@
                     android:layout_height="wrap_content"
                     android:text="How to use PlantMangro:"
                     android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="10dp"
+                    android:textSize="@dimen/_15ssp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     >
 
                 </TextView>
@@ -79,8 +76,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
                     android:text="To identify a plant, simple take a picture of the leaf or select a leaf picture from your Gallery and PlantMangro will identify it instantly!"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/_12ssp"
                     >
 
                 </TextView>
@@ -91,7 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="20dp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_1sdp"
                 >
 
                 <TextView
@@ -99,8 +98,8 @@
                     android:layout_height="wrap_content"
                     android:text="Tips on taking picture:"
                     android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:layout_marginBottom="10dp"
+                    android:textSize="@dimen/_15ssp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     >
 
                 </TextView>
@@ -108,9 +107,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
                     android:text="A clear shot of leaf with proper angle and distance will help PlantMangro identify plants more accurately."
-                    android:textSize="14sp"
-                    android:layout_marginBottom="10dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     >
 
                 </TextView>
@@ -118,6 +118,8 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:textSize="@dimen/_12ssp"
                     android:text="1. Focus the leaf of the mangrove plant at the center of the frame, avoid dark or blurry images."
                     android:textStyle="bold"
                     >
@@ -130,24 +132,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 >
 
                 <ImageView
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="@dimen/_150sdp"
+                    android:layout_height="@dimen/_150sdp"
                     android:src="@drawable/guideline1"
                     android:layout_weight="1"
-                    android:layout_marginRight="4dp"
+                    android:layout_marginRight="@dimen/_4sdp"
                     >
                 </ImageView>
 
                 <ImageView
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="@dimen/_150sdp"
+                    android:layout_height="@dimen/_150sdp"
                     android:src="@drawable/guideline2"
                     android:layout_weight="1"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="@dimen/_4sdp"
                     >
                 </ImageView>
 
@@ -164,7 +167,10 @@
                     android:layout_height="wrap_content"
                     android:text="2. If the plant is too big for the frame, just make sure to include the leaves of the plant."
                     android:textStyle="bold"
-                    android:layout_margin="20dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:justificationMode="inter_word"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_1sdp"
                     >
                 </TextView>
 
@@ -172,24 +178,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     >
 
                     <ImageView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="@dimen/_150sdp"
+                        android:layout_height="@dimen/_150sdp"
                         android:src="@drawable/guideline3"
                         android:layout_weight="1"
-                        android:layout_marginRight="4dp"
+                        android:layout_marginRight="@dimen/_4sdp"
                         >
                     </ImageView>
 
                     <ImageView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="@dimen/_150sdp"
+                        android:layout_height="@dimen/_150sdp"
                         android:src="@drawable/guideline4"
                         android:layout_weight="1"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginLeft="@dimen/_4sdp"
                         >
                     </ImageView>
 
@@ -207,7 +214,10 @@
                     android:layout_height="wrap_content"
                     android:text="3. Avoid getting too close, just make sure the leaves are clear and complete."
                     android:textStyle="bold"
-                    android:layout_margin="20dp"
+                    android:textSize="@dimen/_12ssp"
+                    android:justificationMode="inter_word"
+                    android:layout_marginBottom="@dimen/_1sdp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
                     >
                 </TextView>
 
@@ -215,24 +225,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
                     >
 
                     <ImageView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="@dimen/_150sdp"
+                        android:layout_height="@dimen/_150sdp"
                         android:src="@drawable/guideline5"
                         android:layout_weight="1"
-                        android:layout_marginRight="4dp"
+                        android:layout_marginRight="@dimen/_4sdp"
                         >
                     </ImageView>
 
                     <ImageView
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="@dimen/_150sdp"
+                        android:layout_height="@dimen/_150sdp"
                         android:src="@drawable/guideline6"
                         android:layout_weight="1"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginLeft="@dimen/_4sdp"
                         >
                     </ImageView>
 

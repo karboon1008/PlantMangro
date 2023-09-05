@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Login.LogIn"
+    android:background="@drawable/background">
+
+    <ProgressBar
+        android:id="@+id/logInProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_150sdp"
+        android:theme="@style/Widget.AppCompat.ProgressBar"
+        android:visibility="gone"
+        android:elevation="@dimen/_7sdp"
+        >
+
+    </ProgressBar>
+
+    <TextView
+        android:id="@+id/logInTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        android:textAllCaps="true"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/_35ssp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_120sdp"
+
+        >
+
+    </TextView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutLoginEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:layout_marginHorizontal="@dimen/_25sdp"
+        android:layout_marginVertical="@dimen/_20sdp"
+        style="@style/LoginTextInputLayoutStyle"
+        android:textColorHint="@color/white"
+        app:counterTextColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/logInTitle"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/ic_baseline_person_24"
+            android:drawablePadding="@dimen/_10sdp"
+            android:inputType="text">
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutLoginPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_25sdp"
+        android:layout_marginVertical="@dimen/_20sdp"
+        android:hint="Password"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/layoutLoginEmail"
+        style="@style/LoginTextInputLayoutStyle"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/loginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/ic_baseline_security_24"
+            android:drawablePadding="@dimen/_10sdp"
+            android:inputType="textPassword"
+            >
+
+        </com.google.android.material.textfield.TextInputEditText>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/layoutLoginPassword"
+        android:text="Log In"
+        android:textSize="@dimen/_16ssp"
+        android:textAllCaps="false"
+        android:layout_marginHorizontal="@dimen/_25sdp"
+        android:background="@drawable/loginbtn"
+        android:layout_marginTop="@dimen/_30sdp"
+        >
+
+    </Button>
+
+    <TextView
+        android:id="@+id/ChangeSignInBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create a new account"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center_horizontal"
+        >
+
+    </TextView>
+
+    <RelativeLayout
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeSignInBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/googleBtn"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        >
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:text="OR"
+            android:textColor="#FFFFFF"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_25sdp"
+            android:layout_toLeftOf="@id/tvText"
+            android:background="@color/grey"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_25sdp"
+            android:layout_toRightOf="@id/tvText"
+            android:background="@color/grey"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/googleBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        android:background="@drawable/border_button"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:src="@drawable/googlelogo"
+            >
+
+        </ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Continue with Google"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="@dimen/_16ssp"
+            android:textColor="@color/dark_grey"
+            >
+
+        </TextView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

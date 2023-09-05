@@ -14,7 +14,27 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
+import com.example.recycleviewwithclicklistener.Chat.Chat
+import com.example.recycleviewwithclicklistener.Chat.LatestMessages
+import com.example.recycleviewwithclicklistener.Collection.CollectionPage
+import com.example.recycleviewwithclicklistener.Collection.SQLiteHelper
+import com.example.recycleviewwithclicklistener.Description.mangroveDescription
+import com.example.recycleviewwithclicklistener.Collection.Identify
+import com.example.recycleviewwithclicklistener.Guideline.Guideline
+import com.example.recycleviewwithclicklistener.Intro.IntroSlider
+import com.example.recycleviewwithclicklistener.Intro.IntroSliderAdapter
+import com.example.recycleviewwithclicklistener.Login.LoginStatusManager
+import com.example.recycleviewwithclicklistener.SignUp.Users
+import com.example.recycleviewwithclicklistener.SignUp.Welcome
 import com.example.recycleviewwithclicklistener.databinding.ActivityMainBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
     lateinit var prefEditor: SharedPreferences.Editor
     lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var loginStatusManager: LoginStatusManager
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
 
     private val introSliderAdapter = IntroSliderAdapter(
         listOf(
@@ -49,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             IntroSlider(
                 "Identification",
-                "App to identify Malaysian Mangrove Plants",
+                "Feature of identifying Malaysian Mangrove Plants",
                 R.drawable.identify_slide
             )
         )
@@ -59,6 +82,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        mAuth = FirebaseAuth.getInstance()
+        loginStatusManager = LoginStatusManager(this)
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+
+        displayUsername()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Home"
@@ -96,14 +131,13 @@ class MainActivity : AppCompatActivity() {
                 startActivity(it)
             }
         }
-        
+
         //side drawer
         binding.apply {
             toggle = ActionBarDrawerToggle(this@MainActivity, drawerLayout, R.string.open,R.string.close)
             drawerLayout.addDrawerListener(toggle)
             toggle.syncState()
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
             sideNavView.setNavigationItemSelectedListener{
                 when(it.itemId){
@@ -127,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                         getMangrove()
                         true
                     }
+
                     R.id.navigation_contact -> {
                         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                         val intent = Intent(this@MainActivity, AboutUs::class.java)
@@ -141,6 +176,13 @@ class MainActivity : AppCompatActivity() {
                         true
                     }
 
+                    R.id.navigation_chat -> {
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        val intent = Intent(this@MainActivity, Chat::class.java)
+                        startActivity(intent)
+                        true
+                    }
+
                     R.id.navigation_guideline -> { supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                         val intent = Intent(this@MainActivity, Guideline::class.java)
                         startActivity(intent)
@@ -151,10 +193,62 @@ class MainActivity : AppCompatActivity() {
                         startActivity(intent)
                         true
                     }
+                    R.id.logout-> {
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        signOutAndStartWelcomeActivity()
+                        loginStatusManager.clearLoginDetails()
+                        true
+                    }
                     else -> false
                 }
             }
+        }
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        displayUsername()
+    }
+
+
+    private fun displayUsername(){
+        val username = findViewById<TextView>(R.id.username)
+        val user = mAuth.currentUser
+        val userID = user?.uid ?: ""
+        val usersRef = FirebaseDatabase.getInstance().getReference("users")
+
+        usersRef.child(userID).addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val currentUser = snapshot.getValue(Users::class.java)
+                val curentUsername = currentUser?.name ?: "Guest"
+
+                if(user != null){
+                    val name = user.displayName
+                    if(name != null){
+                        username.text = "Welcome,  $name"
+                    }else{
+                        username.text = "Welcome, $curentUsername"
+                    }
+                }else{
+                    username.text = "You havent sign in yet!"
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                username.text = "Something wrong, try again"
+            }
+        })
+
+    }
+
+    private fun signOutAndStartWelcomeActivity(){
+        mAuth.signOut()
+
+        mGoogleSignInClient.signOut().addOnCompleteListener(this) {
+            val intent = Intent(this@MainActivity, Welcome::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 

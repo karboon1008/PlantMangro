@@ -3,11 +3,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
     android:id="@+id/guideline_cardview"
-    android:layout_marginVertical="2dp"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="8dp">
+    android:layout_marginVertical="@dimen/_2sdp"
+    app:cardElevation="@dimen/_4sdp"
+    app:cardCornerRadius="@dimen/_8sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,12 +20,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/title"
             android:text="Title"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:textStyle="bold"
-            android:textSize="20sp"
+            android:textSize="@dimen/_18ssp"
             >
 
         </TextView>
@@ -35,9 +34,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/desc"
             android:text="desc"
-            android:layout_marginBottom="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:textSize="18sp"
             >
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUp.Welcome"
+    android:background="@drawable/background">
+
+    <TextView
+        android:id="@+id/WelTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal"
+        android:text="Welcome!"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="@dimen/_38sdp"
+        android:layout_marginTop="@dimen/_65sdp"
+        >
+    </TextView>
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="@dimen/_15sdp"
+        app:layout_constraintTop_toBottomOf="@+id/WelTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+    </ImageView>
+
+    <LinearLayout
+        android:id="@+id/loginSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/icon"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_35sdp"
+        android:layout_marginHorizontal="@dimen/_30sdp"
+        >
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:background="@drawable/loginbtn">
+
+        </Button>
+
+        <Button
+            android:id="@+id/signUpBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up"
+            android:background="@drawable/signinbtn"
+            >
+
+        </Button>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,45 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".result_activity">
+    tools:context=".Identify.result_activity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/nav"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="horizontal"
         android:background="@drawable/border_image"
+        android:padding="@dimen/_10sdp"
         >
 
         <Button
             android:id="@+id/collectionBtn"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/white"
-            android:background="@drawable/indicator_active"
+            android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:background="@drawable/indicator_active"
             android:drawableLeft="@drawable/ic_baseline_bookmark_24">
 
         </Button>
 
         <Button
             android:id="@+id/shareBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:layout_gravity="center"
-            android:layout_marginEnd="20dp"
-            android:backgroundTint="@color/mint_green"
-            android:drawableTop="@drawable/ic_baseline_share_24"
-            android:text="Share" />
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/ic_baseline_share_24"
+            app:backgroundTint = "@null"
+            android:layout_alignParentEnd="true"
+            style="?android:attr/buttonBarButtonStyle" />
 
-    </LinearLayout>
-
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -51,6 +47,7 @@
         app:layout_constraintBottom_toTopOf="@+id/nav"
         app:layout_constraintTop_toTopOf="parent"
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,11 +56,25 @@
             app:layout_constraintBottom_toTopOf="@+id/nav"
             >
 
+            <TextView
+                android:id="@+id/click"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/middle_green"
+                android:text="Click the image to know more!"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="center"
+                />
+
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/result_image"
-                android:layout_width="350dp"
-                android:layout_height="350dp"
-                android:layout_marginHorizontal="30dp"
+                android:layout_width="@dimen/_250sdp"
+                android:layout_height="@dimen/_250sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/amarina"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 />
 
             <TextView
@@ -71,31 +82,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Result"
-                android:textSize="22sp"
+                android:textSize="@dimen/_20ssp"
                 android:textStyle="italic|bold"
-                android:layout_marginVertical="20dp"
-                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_25sdp"
                 android:gravity="center"/>
-
-            <TextView
-                android:id="@+id/click"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginHorizontal="30dp"
-                android:textColor="@color/middle_green"
-                android:text="Click the image to know more!"
-                android:gravity="center"
-                />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/commonName"
                 android:text="commonName"
-                android:textSize="20sp"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginBottom="20dp"
+                android:textSize="@dimen/_18ssp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_30sdp"
                 android:gravity="center">
             </TextView>
 
@@ -105,9 +105,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="description"
-                android:textSize="18sp"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginBottom="20dp"
+                android:textSize="@dimen/_14ssp"
+                android:layout_marginHorizontal="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@color/pink" />
 
         </LinearLayout>

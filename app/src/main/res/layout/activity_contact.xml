@@ -10,8 +10,8 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:src="@drawable/frim_logo"
         android:layout_weight="1"
         >
@@ -21,7 +21,7 @@
     <ImageView
         android:id="@+id/LogoUM"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/_40sdp"
         android:src="@drawable/um_logo"
         android:layout_weight="1"
         >

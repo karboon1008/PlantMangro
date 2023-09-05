@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#F3F5F5"
-    android:padding="16dp"
+    android:padding="@dimen/_16sdp"
     android:weightSum="1">
 
     <LinearLayout
@@ -13,12 +13,12 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/_90sdp"
+            android:layout_height="@dimen/_90sdp"
             android:id="@+id/saved_image"
             android:src="@drawable/aofficinalis"
             android:scaleType="centerCrop"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/_10sdp"
             >
 
         </ImageView>
@@ -32,25 +32,26 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvName"
                 android:textStyle="italic"
-                android:textSize="16sp"
+                android:textColor="@color/black"
                 android:text="Name">
             </TextView>
 
             <TextView
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:id="@+id/date"
-                android:textSize="14sp"
-                android:text="Details">
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="Details"
+                android:textColor="@color/black">
+
             </TextView>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:id="@+id/location"
-                android:textSize="14sp"
+                android:textColor="@color/black"
                 android:text="Location">
             </TextView>
 
@@ -59,15 +60,26 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/_45sdp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete"
+            android:background="@drawable/ic_baseline_delete_24"
             android:id="@+id/btn_delete"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:gravity="center"
+            android:textAllCaps="false">
+        </Button>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_upload_24"
+            android:id="@+id/btn_upload"
             android:layout_gravity="center_vertical"
             android:gravity="center"
             android:textAllCaps="false">

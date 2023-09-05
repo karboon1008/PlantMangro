@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".HomeDetails">
+    tools:context=".Guideline.HomeDetails">
 
     <Button
         android:id="@+id/nextBtn"
@@ -12,18 +12,19 @@
         android:layout_height="wrap_content"
         android:text="Next"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="@dimen/_12ssp"
         android:backgroundTint="@color/middle_green"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/open"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="50dp">
+        android:layout_marginBottom="@dimen/_45sdp">
     </Button>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/_20sdp"
+        android:background="@drawable/border_button"
         android:id="@+id/open"
         android:text=""
         app:layout_constraintTop_toBottomOf="@id/nextBtn"
@@ -35,7 +36,7 @@
         android:id="@+id/indicatorsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/nextBtn">
@@ -45,7 +46,7 @@
         android:id="@+id/HomeSliderViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="12dp"
+        android:layout_margin="@dimen/_10sdp"
         android:overScrollMode="never"
         app:layout_constraintBottom_toTopOf="@+id/indicatorsContainer"
         app:layout_constraintTop_toTopOf="parent">

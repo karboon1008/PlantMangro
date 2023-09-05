@@ -1,28 +1,19 @@
 package com.example.recycleviewwithclicklistener
 
 import android.Manifest
-import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.Editor
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.recycleviewwithclicklistener.Collection.SQLiteHelper
 import com.google.android.gms.maps.model.MarkerOptions
 import com.example.recycleviewwithclicklistener.databinding.ActivityMapsBinding
-import com.getkeepsafe.taptargetview.TapTarget
-import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
@@ -30,8 +21,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.ui.IconGenerator
-import org.w3c.dom.Text
-import kotlin.system.measureNanoTime
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -60,7 +49,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val iconGenerator = IconGenerator(this)
         iconGenerator.setTextAppearance(com.google.maps.android.R.style.amu_Bubble_TextAppearance_Light)
-        iconGenerator.setBackground(ContextCompat.getDrawable(this, R.drawable.mangroveicon))
+        iconGenerator.setBackground(ContextCompat.getDrawable(this, R.drawable.nav_head_icon))
 
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -73,10 +62,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.setOnMarkerClickListener(this)
 
         val (namelist, mglolist, imagelist) = sqLiteHelper.getLocationMangrove()
-        for (i in mglolist!!.indices) {
-            for (i in namelist!!.indices) {
-                for (i in imagelist!!.indices) {
-                    val name = namelist!![i]
+        for (i in mglolist.indices) {
+            for (i in namelist.indices) {
+                for (i in imagelist.indices) {
+                    val name = namelist[i]
                     val location = mglolist[i]
                     val markerOptions = MarkerOptions()
                         .position(location)
@@ -136,7 +125,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
 
             image_popout_maps.setImageBitmap(bitmap)
-            title_popout_maps.setText(title)
+            title_popout_maps.text = title
 
             dialogBuilder.setView(dialogLayout)
             dialogBuilder.setPositiveButton("OK", null)

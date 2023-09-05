@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
-    android:layout_marginHorizontal="20dp"
-    android:layout_marginTop="100dp"
+    android:padding="@dimen/_15sdp"
+    android:layout_marginHorizontal="@dimen/_20sdp"
+    android:layout_marginTop="@dimen/_100sdp"
     android:weightSum="4"
     android:orientation="vertical">
 
@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:text="Title Text"
         android:textStyle="bold"
-        android:textSize="18sp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:textSize="@dimen/_16ssp"
         android:gravity="center"
         >
     </TextView>
@@ -32,10 +33,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         android:text="Description Text"
-        android:textSize="15sp"
+        android:textSize="@dimen/_12ssp"
         >
     </TextView>
 
