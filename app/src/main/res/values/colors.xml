@@ -8,12 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="mint_green">#3EB489</color>
+    <color name="purple_50">#F5EFFF</color>
+
     <color name="middle_green">#00695C</color>
     <color name="pink">#ECE9E9</color>
     <color name="grey">#D3DCDE</color>
     <color name="deep_green">#1D4C4F</color>
     <color name="dark_green">#0D1321</color>
+    <color name="mint_green">#A3E4D7</color>
 
     <color name ="transparent_color">#55FFFFFF</color>
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
