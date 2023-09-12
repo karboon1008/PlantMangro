@@ -10,14 +10,14 @@ import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import android.widget.ZoomControls
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -30,12 +30,22 @@ import java.util.concurrent.Executors
 
 class CustomCameraActivity : AppCompatActivity() {
 
+    private var initialFingerSpacing = 0f
+    private var zoomLevel = 1f
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
+    private var camera: Camera? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_custom_camera)
+
+        val viewFinder = findViewById<PreviewView>(R.id.viewFinder)
+        viewFinder.setOnTouchListener { _, event ->
+            handleZoomTouchEvent(event)
+            return@setOnTouchListener true
+        }
 
         // Request camera permissions
         if (allPermissionsGranted()) {
@@ -72,6 +82,48 @@ class CustomCameraActivity : AppCompatActivity() {
     }
 
 
+    private fun handleZoomTouchEvent(event: MotionEvent) {
+        val camera = camera ?: return
+        val cameraControl = camera.cameraControl
+        val maxZoom = camera.cameraInfo.zoomState.value?.maxZoomRatio ?: 1f
+
+        when (event.actionMasked) {
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                if (event.pointerCount >= 2){
+                    initialFingerSpacing = getFingerSpacing(event)
+                    zoomLevel = camera.cameraInfo.zoomState.value?.zoomRatio ?: 1f
+                }
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                if(event.pointerCount >= 2){
+                    val newFingerSpacing = getFingerSpacing(event)
+                    if (newFingerSpacing > initialFingerSpacing) {
+                        if (zoomLevel < maxZoom) {
+                            zoomLevel += 0.05f // Increase zoom level
+                        }
+                    } else if (newFingerSpacing < initialFingerSpacing) {
+                        if (zoomLevel > 1f) {
+                            zoomLevel -= 0.05f // Decrease zoom level
+                        }
+                    }
+
+                    val newZoomRatio = zoomLevel.coerceIn(1f, maxZoom)
+                    cameraControl.setZoomRatio(newZoomRatio)
+                }
+            }
+        }
+    }
+
+    private fun getFingerSpacing(event: MotionEvent): Float {
+        if(event.pointerCount <2) return 0f
+
+        val x = event.getX(0) - event.getX(1)
+        val y = event.getY(0) - event.getY(1)
+        return kotlin.math.sqrt((x * x + y * y).toDouble()).toFloat()
+    }
+
+
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
         val imageCapture = imageCapture ?: return
@@ -94,8 +146,7 @@ class CustomCameraActivity : AppCompatActivity() {
                 contentValues)
             .build()
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
+        // Set up image capture listener, which is triggered after photo has been taken
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(this),
@@ -127,7 +178,6 @@ class CustomCameraActivity : AppCompatActivity() {
         val width = 1080
         val height = 1920
 
-
         cameraProviderFuture.addListener({
             // Used to bind the lifecycle of cameras to the lifecycle owner
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -135,7 +185,6 @@ class CustomCameraActivity : AppCompatActivity() {
             // Preview
             val viewFinder = findViewById<PreviewView>(R.id.viewFinder)
             val preview = Preview.Builder().build().also{it.setSurfaceProvider(viewFinder.surfaceProvider)}
-
             imageCapture = ImageCapture.Builder()
                 .setTargetResolution(Size(width, height)).build()
 
@@ -147,7 +196,7 @@ class CustomCameraActivity : AppCompatActivity() {
                 cameraProvider.unbindAll()
 
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
+                camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture)
 
             } catch(exc: Exception) {

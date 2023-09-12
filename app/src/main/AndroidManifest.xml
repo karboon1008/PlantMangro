@@ -21,6 +21,13 @@
         android:theme="@style/Theme.RecycleViewWithClickListener"
         tools:targetApi="31">
         <activity
+            android:name=".camera"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Chat.Chat"
             android:exported="false">
             <meta-data
